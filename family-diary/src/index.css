@@ -1,10 +1,236 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-@import "tailwindcss";
 
-*{
+@layer base {
+  *, *::before, *::after {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+body{
+      background-color: #E9F1FA;
+
+}
+/* *{
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+} */
+
+.fade{
+  opacity: 0.5;
+  animation: skeletonFade 2s linear infinite;
+}
+
+@keyframes skeletonFade {
+  0%{
+    opacity: 0.3
+  };
+
+  50%{
+    opacity: 0.6
+  };
+  65%{
+    opacity: 0.8
+  };
+  85%{
+    opacity: 0.9
+  };
+  100%{
+    opacity: 0.3
+  }
+}
+
+
+
+
+
+
+/* EMPTY STATE ANIMATION  */
+
+.empty-state {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    #f8fafc,
+    #eef2ff,
+    #f0fdf4
+  );
+  padding: 20px;
+}
+
+.empty-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.08);
+}
+
+.tree-container {
+  position: relative;
+  height: 220px;
+  margin-bottom: 30px;
+}
+
+.tree-root {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  height: 0;
+  background: #22c55e;
+  transform: translateX(-50%);
+  animation: growRoot 1.2s ease forwards;
+}
+
+.vertical {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  width: 4px;
+  height: 0;
+  background: #22c55e;
+  transform: translateX(-50%);
+  animation: growVertical 1.2s ease forwards;
+  animation-delay: 0.5s;
+}
+
+.horizontal {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  width: 0;
+  height: 4px;
+  background: #22c55e;
+  transform: translateX(-50%);
+  animation: growHorizontal 1s ease forwards;
+  animation-delay: 1.2s;
+}
+
+.family-node {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+}
+
+.parent {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: float 3s ease-in-out infinite;
+}
+
+.child {
+  top: 90px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.child-1 {
+  left: 25%;
+  animation-delay: .5s;
+}
+
+.child-2 {
+  right: 25%;
+  animation-delay: 1s;
+}
+
+.empty-card h2 {
+  margin-bottom: 15px;
+  font-size: 2rem;
+  color: #0f172a;
+}
+
+.empty-card p {
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.empty-card button {
+  border: none;
+  background: linear-gradient(
+    135deg,
+    #4f46e5,
+    #7c3aed
+  );
+  color: white;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .3s ease;
+}
+
+.empty-card button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(124,58,237,.3);
+}
+
+@keyframes growRoot {
+  to {
+    height: 80px;
+  }
+}
+
+@keyframes growVertical {
+  to {
+    height: 70px;
+  }
+}
+
+@keyframes growHorizontal {
+  to {
+    width: 220px;
+  }
+}
+
+@keyframes float {
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+
+/* password modal slide up animation */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.2s ease-out;
 }
