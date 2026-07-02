@@ -34,7 +34,7 @@ export default function AnimatedLayout() {
           animate="animate"
           exit="exit"
           transition={{
-            duration: 0.35,
+            duration: 0.10,
             ease: [0.22, 1, 0.36, 1],
           }}
           className="absolute inset-0 w-full h-full">

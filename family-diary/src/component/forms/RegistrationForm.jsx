@@ -3,8 +3,10 @@ import "react-international-phone/style.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FaUpload } from "react-icons/fa";
 import { useState } from "react";
-import Requirement from "./PasswordRequirement";
 import Button from "../Button";
+import { NavLink } from "react-router-dom";
+import { PasswordStrength } from "../../utilities/PasswordStrength";
+import PasswordShowSheet from "../../utilities/PasswordShowSheet";
 
 const RegistrationForm = () => {
   const [phone, setPhone] = useState("");
@@ -14,15 +16,8 @@ const RegistrationForm = () => {
   const [password, setPassword] = useState("");
 
   // password strength check
-  const checks = {
-    length: password.length >= 8,
-    uppercase: /[A-Z]/.test(password),
-    lowercase: /[a-z]/.test(password),
-    number: /\d/.test(password),
-    special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-  };
+  const { checks, strength } = PasswordStrength(password);
 
-  const strength = Object.values(checks).filter(Boolean).length;
 
   return (
     <div className="min-h-screen relative overflow-hidden flex justify-start flex-col py-5 items-center">
@@ -202,64 +197,7 @@ const RegistrationForm = () => {
               </button>
 
               {showPasswordSheet && (
-                <div
-                  className="
-                  absolute
-                  top-14
-                  left-0
-                  w-full
-                  bg-white
-                  border border-gray-200
-                  rounded-xl
-                  shadow-lg
-                  p-3
-                  z-30
-                  animate-slide-up
-                ">
-                  <div className="mb-3">
-                    <p className="text-xs font-semibold text-gray-700 mb-2">
-                      Password Strength
-                    </p>
-
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map((item) => (
-                        <div
-                          key={item}
-                          className={`h-1.5 flex-1 rounded-full ${
-                            strength >= item
-                              ? strength <= 2
-                                ? "bg-red-500"
-                                : strength <= 4
-                                  ? "bg-yellow-500"
-                                  : "bg-green-500"
-                              : "bg-gray-200"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-1 text-xs">
-                    <Requirement met={checks.length} text="8+ characters" />
-
-                    <Requirement
-                      met={checks.uppercase}
-                      text="Uppercase letter"
-                    />
-
-                    <Requirement
-                      met={checks.lowercase}
-                      text="Lowercase letter"
-                    />
-
-                    <Requirement met={checks.number} text="Number" />
-
-                    <Requirement
-                      met={checks.special}
-                      text="Special character"
-                    />
-                  </div>
-                </div>
+                <PasswordShowSheet password={password} />
               )}
             </div>
 
@@ -303,6 +241,15 @@ const RegistrationForm = () => {
             <div className=" w-80">
               <Button text="Register" primary />
             </div>
+
+            <p className="text-gray-500">
+              Already have an account?{" "}
+              <NavLink
+                to={"/login"}
+                className={"text-[#2E5E99] font-semibold ml-3"}>
+                Login
+              </NavLink>
+            </p>
           </div>
         </form>
       </div>

@@ -234,3 +234,20 @@ body{
 .animate-slide-up {
   animation: slideUp 0.2s ease-out;
 }
+
+
+/* ANIMATE MODAL */
+
+@keyframes modal-animation {
+  from{
+    transform: translateY(100vh)
+  }
+
+  to{
+    transform: translateY(0vh)
+  }
+}
+
+.animate-modal{
+  animation: modal-animation 0.5s ease;
+}

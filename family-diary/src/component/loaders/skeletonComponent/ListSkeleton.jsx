@@ -17,8 +17,8 @@ const ListSkeleton = ({ isDouble = false, withIcon= true }) => {
                     <div className={ `${isDouble?'h-7':' h-14' } ${withIcon?'hidden':""}  bg-gray-400  w-full`}></div>
                 </div>
             </div>
-            <div className=" flex justify-center items-center">
-                <div className= {`${withIcon? 'w-70':'w-30'} bg-gray-400 h-10  `}>
+            <div className=" flex justify-center items-center w-full">
+                <div className= {`${withIcon? 'w-full':'w-30'} bg-gray-400 h-10  `}>
 
                 </div>
             </div>

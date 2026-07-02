@@ -6,7 +6,7 @@ const EventCard = ({
     time = "2:30pm"
 }) => {
   return (
-    <div className="flex px-4 gap-4 flex-wrap my-5 ">
+    <div className="flex  gap-4  my-5 ">
         <div className="bg-[#D0DDED] min-h-26 w-42 rounded-2xl px-2 py-3 flex flex-col gap-2 shadow-md shadow-gray-200">
             <div className=" flex justify-between ">
                 <FaUser className="text-[#2E5E99] text-xl " />

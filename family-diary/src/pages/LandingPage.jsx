@@ -6,15 +6,23 @@ import EventList from "../component/EventList";
 import FamilyListCard from "../component/FamilyListCard";
 import Login from "../component/forms/Login";
 import RegistrationForm from "../component/forms/RegistrationForm";
-import Navbar from "../component/loaders/staticComponents/Navbar";
+import Navbar from "../component/staticComponents/Navbar";
 import MemberCard from "../component/MemberCard";
+import { useState } from "react";
+import SpinLoader from "../component/loaders/SpinLoader";
 
 const LandingPage = () => {
+  const [display, setDisplay] = useState(false)
+  setTimeout(() => {
+    setDisplay(true)
+  }, 2000);
   return (
-    <section className="relative min-h-screen overflow-hidden ">
-      {/* Top Left Blob */}
-      <div
-        className="
+    <section className="relative min-h-screen overflow-hidden">
+      {display ? (
+        <div className="relative min-h-screen overflow-hidden ">
+          {/* Top Left Blob */}
+          <div
+            className="
       absolute
       -top-24
       -left-24
@@ -28,8 +36,8 @@ const LandingPage = () => {
       pointer-events-none
       z-0
     ">
-        <div
-          className="
+            <div
+              className="
         absolute
         inset-5
         rounded-[50%_45%_55%_50%]
@@ -37,12 +45,12 @@ const LandingPage = () => {
         blur-[40px]
         opacity-80
       "
-        />
-      </div>
+            />
+          </div>
 
-      {/* Bottom Right Blob */}
-      <div
-        className="
+          {/* Bottom Right Blob */}
+          <div
+            className="
       absolute
       -bottom-24
       -right-24
@@ -56,11 +64,11 @@ const LandingPage = () => {
       pointer-events-none
       z-0
     "
-        style={{
-          animationDelay: "2s",
-        }}>
-        <div
-          className="
+            style={{
+              animationDelay: "2s",
+            }}>
+            <div
+              className="
         absolute
         inset-5
         rounded-[45%_55%_50%_55%]
@@ -68,36 +76,42 @@ const LandingPage = () => {
         blur-[40px]
         opacity-80
       "
-        />
-      </div>
+            />
+          </div>
 
-      {/* Your Content */}
-      <div className="relative z-10 py-5 px-5">
-        <div className="flex justify-center">
-          <img
-            src="./public/images/family illustraytion 1.png"
-            className="h-72"
-            alt=""
-          />
+          {/* Your Content */}
+          <div className="relative z-10 py-5 px-5">
+            <div className="flex justify-center">
+              <img
+                src="./public/images/family-illustraytion.png"
+                className="h-72"
+                alt=""
+              />
+            </div>
+            <div className="mt-4">
+              <h1 className="text-3xl text-[#2E5E99] mb-4">
+                Stay connected with what matters most.
+              </h1>
+              <p className="text-sm text-gray-500">
+                Family Diary helps you manage family members, track birthdays,
+                and organize events, all in one simple, shared space.
+              </p>
+            </div>
+            <div className="flex flex-col gap-5 mt-8">
+              <NavLink to={"/login"}>
+                <Button primary />
+              </NavLink>
+              <NavLink to={"/register"}>
+                <Button text="Register" />
+              </NavLink>
+            </div>
+          </div>
         </div>
-        <div className="mt-4">
-          <h1 className="text-3xl text-[#2E5E99] mb-4">
-            Stay connected with what matters most.
-          </h1>
-          <p className="text-sm text-gray-500">
-            Family Diary helps you manage family members, track birthdays, and
-            organize events, all in one simple, shared space.
-          </p>
+      ) : (
+        <div>
+          <SpinLoader />
         </div>
-        <div className="flex flex-col gap-5 mt-8">
-          <NavLink to={"/login"}>
-            <Button primary />
-          </NavLink>
-          <NavLink to={"/register"}>
-            <Button text="Register" />
-          </NavLink>
-        </div>
-      </div>
+      )}
     </section>
   );
 };

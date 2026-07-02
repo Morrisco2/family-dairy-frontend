@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import Button from "./Button"
 
 const FamilyListCard = ({
@@ -5,8 +6,9 @@ const FamilyListCard = ({
     leaderName = "Uffikairo Morrison",
     Image
 }) => {
+    const navigate = useNavigate()
     return (
-        <div className="px-4 flex flex-col gap-4 my-5">
+        <div className="flex flex-col gap-4">
             <div className="bg-[#D0DDED] min-h-20 rounded-2xl  p-4 flex justify-between items-center">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-[#2E5E99] font-semibold text-lg">{familyName}</h1>
@@ -16,7 +18,7 @@ const FamilyListCard = ({
                     </div>
                 </div>
                 <div>
-                    <Button primary long={false} text="Join" />
+                    <Button onClick={()=>navigate("/dashboard")}  primary long={false} text="Join" />
                 </div>
             </div>
         </div>
