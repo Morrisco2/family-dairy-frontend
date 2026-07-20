@@ -8,25 +8,23 @@ const DeleteConfirmationModal = ({ event, onCancel, onContinue }) => {
 
   return (
     <div className="bg-[#E9F1FA] rounded-2xl w-full max-w-sm px-6 py-8 animate-modal shadow-xl">
-      {/* Warning Icon */}
 
       <div className="flex justify-center mb-5">
-        <div className="w-18 h-18 rounded-full bg-red-100 flex items-center justify-center">
+        {/* <div className="w-18 h-18 rounded-full bg-red-100 flex items-center justify-center">
           <FaExclamationTriangle className="text-red-600 text-4xl" />
-        </div>
+        </div> */}
       </div>
 
       {/* Heading */}
 
-      <div className="text-center">
+      <div className="">
         <h2 className="text-2xl font-bold text-[#2E5E99]">
           Delete {event.type}
         </h2>
 
         <p className="text-gray-600 mt-4 leading-relaxed">
           Are you sure you want to permanently delete
-          <br />
-          <span className="font-semibold text-black">"{eventName}"</span>?
+          <span className="font-semibold text-black ml-3">"{eventName}"</span>?
         </p>
       </div>
 

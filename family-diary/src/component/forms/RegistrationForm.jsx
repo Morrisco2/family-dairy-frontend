@@ -239,7 +239,7 @@ const RegistrationForm = () => {
             </div>
 
             <div className=" w-80">
-              <Button text="Register" primary />
+              <Button text="Register" primary type="submit" />
             </div>
 
             <p className="text-gray-500">

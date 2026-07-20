@@ -28,17 +28,20 @@ const HomePage = () => {
     setSelectedEvent(null);
   }, []);
 
-  const { upcomingEvents, meetings, incidents } = useMemo(() => {
-    return {
-      upcomingEvents: eventsDemoData.filter(
-        (item) => item.type === "events" || item.type === "birthday",
-      ),
+  const { upComingBirthday, upcomingEvents, meetings, incidents } =
+    useMemo(() => {
+      return {
+        upComingBirthday: eventsDemoData.filter(
+          (item) => item.type === "birthday" && item.status === "upcoming",
+        ),
 
-      meetings: eventsDemoData.filter((item) => item.type === "meeting"),
+        upcomingEvents: eventsDemoData.filter(
+          (item) => item.type === "meeting" || item.type === "events",
+        ),
 
-      incidents: eventsDemoData.filter((item) => item.type === "incident"),
-    };
-  }, []);
+        incidents: eventsDemoData.filter((item) => item.type === "incident"),
+      };
+    }, []);
 
   return (
     <div className="py-3 px-4 flex flex-col gap-6 min-h-screen pb-48">
@@ -47,6 +50,7 @@ const HomePage = () => {
       {loaded ? (
         <ProfileCard homePage today user={user[0]} />
       ) : (
+          
         <ProfileCardSkeleton forHome forEvent={false} />
       )}
 
@@ -62,9 +66,9 @@ const HomePage = () => {
 
       <div className="mt-3">
         <EventSection
-          title="Upcoming Events"
+          title="Upcoming Birthday"
           emptyText="No Event Found"
-          data={upcomingEvents}
+          data={upComingBirthday}
           loaded={loaded}
           empty={empty}
           onSelect={handleSelectEvent}
@@ -72,9 +76,9 @@ const HomePage = () => {
       </div>
 
       <EventSection
-        title="Meetings"
+        title="Upcoming Events"
         emptyText="No Meeting Found"
-        data={meetings}
+        data={upcomingEvents}
         loaded={loaded}
         empty={empty}
         onSelect={handleSelectEvent}

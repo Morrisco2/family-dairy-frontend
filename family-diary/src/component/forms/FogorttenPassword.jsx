@@ -187,7 +187,7 @@ const FogorttenPassword = () => {
             </label>
           </div>
           <div className="mt-5">
-            <Button primary text="Submit" loading={isLoading} />
+            <Button type="submit" primary text="Submit" loading={isLoading} />
           </div>
         </form>
         <div className="">
@@ -216,34 +216,9 @@ const FogorttenPassword = () => {
             <h1 className="text-xl  mb-7   font-bold text-[#2E5E99]">
               enter the token sent to your email
             </h1>
-            {/* <label htmlFor="" className="text-2xl font-bold text-[#2E5E99] ">
-            Enter token
-          </label> */}
+          
             <div className="mt-3 flex gap-3 justify-center">
-              {/* <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              />
-              <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              />
-              <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              />
-              <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              />
-              <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              />
-              <input
-                type="text"
-                className="bg-[#D0DDED] w-10 h-10 rounded-lg focus:outline-[#2E5E99] text-3xl font-bold flex px-2 text-[#2E5E99]"
-              /> */}
+             
 
               {otp.map((digit, index) => (
                 <input

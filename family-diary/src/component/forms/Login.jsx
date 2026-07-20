@@ -18,11 +18,12 @@ const Login = () => {
     const name = event.target.name;
     const value = event.target.value;
     setInput((prev) => ({ ...prev, [name]: value }));
+
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    
     if (!input.email || !input.password) {
       setLoading(false);
       setStatus("failed");
@@ -126,7 +127,7 @@ const Login = () => {
         </div>
 
         <div className="w-80 mt-5">
-          <Button primary loading={loading} onClick={handleAlert} />
+          <Button primary loading={loading} type="submit" onClick={handleAlert} />
         </div>
         <div>
           <p className="text-gray-500">

@@ -59,7 +59,7 @@ const MemberProfilePage = ({ setSelectedUser }) => {
       </div>
 
       {openDelete && (
-        <div className="fixed inset-0 bg-black/50 animate-modal flex justify-center items-center px-4">
+        <div className="fixed inset-0 bg-black/50 z-9999 md:px-98 animate-modal flex justify-center items-center px-4">
           <div className="bg-[#E9F1FA] py-3 px-4 w-full rounded-2xl flex flex-col gap-5">
             <div className="flex justify-end">
               <button

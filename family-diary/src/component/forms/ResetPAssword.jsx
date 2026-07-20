@@ -17,7 +17,7 @@ const ResetPAssword = () => {
           <BackgroundGradient />
           <div className="flex flex-col gap-2 items-center mt-10 mb-10">
             <FiLock className="text-7xl text-[#2E5E99]" />
-            <h1 className="text-2xl text-[#2E5E99]">Reset Password</h1>
+            <h1 className="text-2xl text-[#2E5E99]">Creatae New Password</h1>
           </div>
           <div className="relative w-80">
             <input
@@ -88,7 +88,7 @@ const ResetPAssword = () => {
           </div>
         </div>
         <div className="mt-10 px-6">
-          <Button primary text="Reset" />
+          <Button primary text="Reset" type="submit" />
         </div>
       </form>
     </div>

@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../Button";
 
-const EventForm = ({setAddEvent}) => {
+const EventForm = ({ event, onClick }) => {
+  const [input, setInput] = useState({
+    title: event?.title ?? event?.celebrant ?? "",
+    type: event?.type ?? "",
+    venue: event?.venue ?? "",
+    date: event?.date ?? null,
+    time: event?.time ?? null,
+    description: event?.description ?? "",
+  });
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setInput((prev)=>({...prev, [name]:value}))
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert("submitted")
+  }
+
   return (
     <div className="bg-[#E9F1FA] py-4 px-5 w-full rounded-xl md:w-96">
       <div className="text-xl flex justify-end font-semibold text-[#2E5E99]">
-        <button onClick={()=>setAddEvent(false)}>X</button>
+        <button onClick={onClick}>X</button>
       </div>
 
       <div className="flex flex-col gap-5">
@@ -17,6 +38,9 @@ const EventForm = ({setAddEvent}) => {
             <input
               type="text"
               id="title"
+              name="title"
+              value={input.title}
+              onChange={handleChange}
               placeholder=" "
               className="peer w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md"
             />
@@ -33,6 +57,9 @@ const EventForm = ({setAddEvent}) => {
           <div className="relative flex-1">
             <select
               id="eventType"
+              name="type"
+              value={input.value}
+              onChange={handleChange}
               defaultValue=""
               required
               className="peer w-full h-12 px-3 bg-[#D0DDED] rounded-md outline-none appearance-none">
@@ -102,6 +129,9 @@ const EventForm = ({setAddEvent}) => {
             <input
               type="text"
               id="venue"
+              name="venue"
+              value={input.venue}
+              onChange={handleChange}
               placeholder=" "
               className="peer w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md"
             />
@@ -120,7 +150,14 @@ const EventForm = ({setAddEvent}) => {
               <label className="font-semibold" htmlFor="dob">
                 Event date
               </label>
-              <input type="date" className="bg-[#D0DDED] h-12 px-3 " id="dob" />
+              <input
+                type="date"
+                name="date"
+                value={input.date}
+                onChange={handleChange}
+                className="bg-[#D0DDED] h-12 px-3 "
+                id="dob"
+              />
             </div>
             <div className="relative flex-1 ">
               <label className="font-semibold" htmlFor="dob">
@@ -128,6 +165,9 @@ const EventForm = ({setAddEvent}) => {
               </label>
               <input
                 type="time"
+                name="time"
+                value={input.time}
+                onChange={handleChange}
                 className="bg-[#D0DDED] h-12 px-3 w-full "
                 id="dob"
               />
@@ -138,6 +178,9 @@ const EventForm = ({setAddEvent}) => {
             <textarea
               type="text"
               id="description"
+              name="description"
+              value={input.description}
+              onChange={handleChange}
               placeholder=" "
               onInput={(e) => {
                 e.target.style.height = "auto";

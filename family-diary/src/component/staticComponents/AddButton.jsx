@@ -31,7 +31,7 @@ const AddButton = () => {
       {addEvent && (
         <div className="fixed z-9999 inset-0 bg-black/50 w-full animate-modal">
           <div className="flex justify-center items-center w-full min-h-screen px-4">
-            <EventForm setAddEvent={setAddEvent} />
+            <EventForm onClick={()=>setAddEvent(false)} />
           </div>
         </div>
       )}

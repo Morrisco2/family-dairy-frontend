@@ -81,6 +81,7 @@ const CreateFamilyForm = ({ setCreateFamily }) => {
             text={`${loading ? "Creating.." : "Create"}`}
             icon
             loading={loading}
+            type="submit"
           />
         </div>
       </form>

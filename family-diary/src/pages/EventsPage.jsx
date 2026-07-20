@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import EventForm from "../component/forms/EventForm";
 import BackgroundGradient from "../utilities/BackgroundGradient";
@@ -12,32 +12,47 @@ import eventsDemoData from "../utilities/eventsDemoData";
 import ListSkeleton from "../component/loaders/skeletonComponent/ListSkeleton";
 import { useNavigate } from "react-router-dom";
 import EmptyFamilySearch from "../component/EmptyFamilySearch";
+import SearchBar from "../component/SearchBar";
+import EventSection from "../component/EventsAndModals/EventSection";
+import EventDetailsModal from "../component/EventsAndModals/EventDetailsModal";
+
 
 const EventsPage = () => {
   const [loaded, setLoaded] = useState(true);
   const [empty, setEmpty] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [addEvent, setAddEvent] = useState(false);
 
-  // const upcoming = eventsDemoData.filter((item) => item.type === "events");
-  // console.log(upcoming);
+  const handleSelectEvent = useCallback((event) => {
+    setSelectedEvent(event);
+  }, []);
 
-  const events = eventsDemoData.filter((item) => {
-    return item.type === "events" || item.type === "birthday";
-  });
+  const handleCloseModal = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
 
-  const upcoming = events
-    .filter((item) => {
-      return item.status === "upcoming";
-    })
-    .slice(0, 4);
+  const { events, upcoming, pastEvents, incidents } = useMemo(() => {
+    return {
+      events: eventsDemoData.filter(
+        (item) => item.type === "events" || item.type === "birthday",
+      ),
 
-  const pastEvents = events
-    .filter((item) => item.status === "completed")
-    .slice(0, 4);
+      upcoming: eventsDemoData.filter(
+        (item) =>
+          (item.type === "events" || item.type === "birthday") &&
+          item.status === "upcoming",
+      ),
+      pastEvents: eventsDemoData.filter(
+        (item) =>
+          (item.type === "events" || item.type === "birthday") &&
+          item.status === "completed",
+      ),
 
-  const incidents = eventsDemoData.filter((item) => item.type === "incident");
+      incidents: eventsDemoData.filter((item) => item.type === "incident"),
+    };
+  }, []);
+
+
   return (
     <div className="min-h-screen px-4 py-3 pb-20 flex flex-col gap-5">
       <div>
@@ -64,6 +79,9 @@ const EventsPage = () => {
             <TotalCardSkeleton />
           </div>
         )}
+        <div className="mt-5">
+          <SearchBar placeholder="search events..." />
+        </div>
       </div>
       <div className="flex flex-col gap-4 mt-5 animate-modal">
         <h1 className="text-2xl font-semibold text-[#2E5E99]">Upcoming</h1>
@@ -78,11 +96,13 @@ const EventsPage = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {upcoming.map((event, index) => (
-                  <button key={index} onClick={() => setSelectedEvent(event)}>
-                    <EventList event={event} />
-                  </button>
-                ))}
+                <EventSection
+                  emptyText="No incident Found"
+                  data={upcoming}
+                  loaded={loaded}
+                  empty={empty}
+                  onSelect={handleSelectEvent}
+                />
               </div>
             )}
           </div>
@@ -106,11 +126,13 @@ const EventsPage = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {pastEvents.map((event, index) => (
-                  <button key={index} onClick={() => setSelectedEvent(event)}>
-                    <EventList event={event} />
-                  </button>
-                ))}
+                <EventSection
+                  emptyText="No incident Found"
+                  data={pastEvents}
+                  loaded={loaded}
+                  empty={empty}
+                  onSelect={handleSelectEvent}
+                />
               </div>
             )}
           </div>
@@ -135,15 +157,13 @@ const EventsPage = () => {
             <div className="flex flex-col gap-4">
               {loaded ? (
                 <div className="flex flex-col gap-4">
-                  {incidents.slice(0, 3).map((incident) => {
-                    return (
-                      <button
-                        key={incident.id}
-                        onClick={() => setSelectedEvent(incident)}>
-                        <EventList event={incident} />
-                      </button>
-                    );
-                  })}
+                  <EventSection
+                    emptyText="No incident Found"
+                    data={incidents}
+                    loaded={loaded}
+                    empty={empty}
+                    onSelect={handleSelectEvent}
+                  />
                 </div>
               ) : (
                 <div>
@@ -158,7 +178,7 @@ const EventsPage = () => {
         </div>
       </div>
 
-      {selectedEvent && (
+      {/* {selectedEvent && (
         <div className="fixed inset-0 z-9999 bg-black/40 flex justify-center items-center px-5 ">
           {!openDelete && (
             <div className="bg-[#E9F1FA] rounded-2xl w-full max-w-sm px-6 py-8 animate-modal">
@@ -242,12 +262,14 @@ const EventsPage = () => {
             </div>
           )}
         </div>
-      )}
+      )} */}
       {addEvent && (
         <div className="inset-0 fixed bg-black/50 z-999 animate-modal flex justify-center items-center px-4">
-          <EventForm setAddEvent={setAddEvent} />
+          <EventForm onClick={() => setAddEvent(false)} />
         </div>
       )}
+
+      <EventDetailsModal event={selectedEvent} onClose={handleCloseModal} />
     </div>
   );
 };

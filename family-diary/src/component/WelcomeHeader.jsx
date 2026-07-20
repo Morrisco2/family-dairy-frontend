@@ -4,7 +4,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { user } from "../utilities/userDemoData";
 
 const WelcomeHeader = ({ name = "Morrisco Uffikairo Adibor" }) => {
-  console.log(user);
   
   const navigate = useNavigate()
 

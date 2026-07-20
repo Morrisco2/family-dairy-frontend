@@ -5,6 +5,8 @@ import {
   Route,
 } from "react-router-dom";
 
+import NetworkProvider from "./component/network/NetworkProvider";
+
 import AnimatedLayout from "./layouts/AnimatedLayout";
 
 import LandingPage from "./pages/LandingPage";
@@ -25,36 +27,47 @@ import NotificationPage from "./pages/NotificationPage";
 import HistoryPage from "./pages/HistoryPage";
 import MemberProfilePage from "./pages/MemberProfilePage";
 import MyProfilePage from "./pages/MyProfilePage";
+import NetworkBanner from "./component/network/NetworkBanner";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<AnimatedLayout />}>
-      <Route path="/" index element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/forget-password" element={<FogorttenPassword />} />
-      <Route path="/reset-password" element={<ResetPAssword />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/join-family" element={<JoinFamilyPage />} />
+    <Route>
+      <Route element={<AnimatedLayout />}>
+        <Route path="/" index element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forget-password" element={<FogorttenPassword />} />
+        <Route path="/reset-password" element={<ResetPAssword />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/join-family" element={<JoinFamilyPage />} />
+      </Route>
       <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="/dashboard/members" element={<FamilyMemberPage />} />
-        <Route path="/dashboard/events" element={<EventsPage />} />
-        {/* <Route path="/dashboard/incidence" element={<IncidentPage />} /> */}
-        <Route path="/dashboard/history" element={<HistoryPage />} />
-        <Route path="/dashboard/add-member" element={<AddFamilyMember />} />
-        <Route path="/dashboard/notification" element={<NotificationPage />} />
-        <Route path="/dashboard/my-profile" element={<MyProfilePage />} />
+        <Route element={<AnimatedLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/dashboard/members" element={<FamilyMemberPage />} />
+          <Route path="/dashboard/events" element={<EventsPage />} />
+          {/* <Route path="/dashboard/incidence" element={<IncidentPage />} /> */}
+          <Route path="/dashboard/history" element={<HistoryPage />} />
+          <Route path="/dashboard/add-member" element={<AddFamilyMember />} />
+          <Route
+            path="/dashboard/notification"
+            element={<NotificationPage />}
+          />
+          <Route path="/dashboard/my-profile" element={<MyProfilePage />} />
+        </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
-    </Route>
+    </Route>,
   ),
 );
 
 function App() {
   return (
-    <div className=" min-h-screen touch-pan-y md:px-52 lg:px-80">
-      <RouterProvider router={router} />
-    </div>
+    <NetworkProvider>
+      <NetworkBanner />
+      <div className=" min-h-screen touch-pan-y md:px-52 lg:px-80">
+        <RouterProvider router={router} />
+      </div>
+    </NetworkProvider>
   );
 }
 

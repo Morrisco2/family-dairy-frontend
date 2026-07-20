@@ -131,8 +131,8 @@ const MyProfilePage = () => {
 
       {/* MY PRECIOUS MODALS STARTS FROM HERE */}
       {editPicture && (
-        <div className="fixed inset-0 bg-black/50 z-999 animate-modal px-4 flex justify-center items-center ">
-          <div className="bg-[#E9F1FA] w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
+        <div className="fixed inset-0 bg-black/50 md:px-98 z-999 animate-modal px-4 flex justify-center items-center ">
+          <div className="bg-[#E9F1FA] md:w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
             <div className="text-2xl flex justify-between mb-4">
               <h1 className="text-xl font-semibold text-[#2E5E99]">
                 Update Profile Picture
@@ -164,9 +164,9 @@ const MyProfilePage = () => {
       {/* EDIT DETAIL MODAL */}
 
       {editDetail && (
-        <div className="fixed inset-0 bg-black/50 z-999 animate-modal px-4 flex justify-center items-center ">
-          <div className="bg-[#E9F1FA] w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
-            <div className="text-2xl flex justify-between mb-4">
+        <div className="fixed inset-0 bg-black/50 md:px-98 z-999 animate-modal px-4 flex justify-center items-center ">
+          <div className="bg-[#E9F1FA] md:justify-center md:items-center md:w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
+            <div className="text-2xl  w-full flex justify-between mb-4">
               <h1 className="text-xl font-semibold text-[#2E5E99]">
                 Update Details
               </h1>

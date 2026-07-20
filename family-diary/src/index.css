@@ -251,3 +251,22 @@ body{
 .animate-modal{
   animation: modal-animation 0.5s ease;
 }
+
+
+/* ALERT TOASTER REVERSE PROGRESS */
+
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
+.animate-toast-progress {
+  animation-name: toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}

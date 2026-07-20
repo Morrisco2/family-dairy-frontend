@@ -1,14 +1,15 @@
 import React, { memo, useState } from "react";
 import { FaEdit, FaTrash, FaTimes } from "react-icons/fa";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
-
+import EventForm from "../forms/EventForm";
 const EventDetailsModal = ({ event, onClose }) => {
+  const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!event) return null;
 
   const eventName = event.title || `${event.celebrant}'s Birthday`;
-
+ 
   const handleClose = () => {
     setShowDeleteDialog(false);
     onClose();
@@ -81,23 +82,21 @@ const EventDetailsModal = ({ event, onClose }) => {
               </div>
             )}
 
-            <div className="flex justify-between">
-              <span className="font-semibold">Date</span>
+            <div className="flex justify-between mt-6">
 
               <span>{event.date}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="font-semibold">Time</span>
 
               <span>{event.time}</span>
             </div>
+
           </div>
 
           {/* Buttons */}
 
           <div className="flex justify-end gap-3 mt-8">
-            <button className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2E5E99] text-white">
+            <button
+              onClick={() => setShowEditModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2E5E99] text-white">
               <FaEdit />
               Edit
             </button>
@@ -120,6 +119,11 @@ const EventDetailsModal = ({ event, onClose }) => {
             handleClose();
           }}
         />
+      )}
+      {showEditModal && (
+        <div className="inset-0 bg-black/50 fixed flex justify-center items-center px-4 animate-modal">
+          <EventForm event={event} onClick={() => setShowEditModal(false)} />
+        </div>
       )}
     </div>
   );
