@@ -52,7 +52,7 @@ const AddHistoryForm = () => {
   };
 
   return (
-    <div className="animate-modal inset-0 fixed px-4 bg-black/50 z-999 flex justify-center items-center">
+    <div className="animate-modal inset-0 md:px-82  fixed px-4 bg-black/50 z-999 flex justify-center items-center">
       <form action="" className="w-full" onSubmit={handleSubmit}>
         <div className="bg-[#E9F1FA] py-5 px-4 rounded-2xl w-full flex flex-col gap-5">
           <h1 className="text-xl font-semibold text-[#2E5E99]">

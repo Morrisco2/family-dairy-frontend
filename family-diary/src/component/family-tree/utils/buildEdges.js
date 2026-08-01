@@ -1,30 +1,20 @@
-/**
- * Builds parent → child edges from the
- * family relationship data.
- */
-export function buildEdges(members) {
+export function buildEdges(nodes) {
   const edges = [];
 
-  members.forEach((member) => {
-    member.children.forEach((childId) => {
+  nodes.forEach((child) => {
+    const parents = child.data.parents || [];
+
+    parents.forEach((parentId) => {
       edges.push({
-        id: `${member.id}-${childId}`,
-        source: member.id,
-        target: childId,
-
-        type: "smoothstep",
-
-        animated: false,
-
-        selectable: false,
-
-        style: {
-          strokeWidth: 2,
-          stroke: "#000",
-        },
+        id: `${parentId}-${child.id}`,
+        source: parentId,
+        target: child.id,
+        type: "family",
       });
     });
   });
+
+  console.log("Generated edges:", edges);
 
   return edges;
 }

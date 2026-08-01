@@ -1,0 +1,167 @@
+this is my buildFamilyTree "import { buildHierarchy } from "./buildHierarchy";
+
+import { calculateWidths } from "./calculateWidths";
+
+import { assignCoordinates } from "./assignCoordinates";
+
+import { buildReactFlowNodes } from "./buildReactFlowNodes";
+
+import { buildRelationshipGraph } from "./buildRelationshipGraph";
+
+import { buildEdges } from "../edges/buildEdges";
+
+
+
+export function buildFamilyTree(members) {
+
+  const hierarchy = buildHierarchy(members);
+
+  calculateWidths(hierarchy);
+
+  assignCoordinates(hierarchy);
+
+  const familyNodes = buildReactFlowNodes(hierarchy);
+
+
+
+  const edges = buildEdges(familyNodes);
+
+
+
+  return {
+
+    nodes: familyNodes,
+
+    edges,
+
+  };
+
+} ",, this is my buildEdge file "export function buildEdges(nodes) {
+
+  const edges = [];
+
+
+
+  nodes.forEach((child) => {
+
+    child.data.parents.forEach((parentId) => {
+
+      edges.push({
+
+        id: `${parentId}-${child.id}`,
+
+        source: parentId,
+
+        target: child.id,
+
+        type: "family",
+
+        animated: false,
+
+      });
+
+    });
+
+  });
+
+
+
+  return edges;
+
+} ", this is my buildReactFlowNode file "/**
+
+ * Converts the hierarchy into
+
+ * React Flow nodes.
+
+ */
+
+
+
+export function buildReactFlowNodes(node, nodes = []) {
+
+  if (!node) return nodes;
+
+
+
+  nodes.push({
+
+    id: node.id,
+
+
+
+    type: node.isRoot ? "root" : "family",
+
+
+
+    position: {
+
+      x: node.x,
+
+      y: node.y,
+
+    },
+
+
+
+    data: {
+
+      ...node,
+
+    },
+
+  });
+
+
+
+  node.childrenNodes.forEach((child) => buildReactFlowNodes(child, nodes));
+
+
+
+  return nodes;
+
+} ", and this is my familyEdge file "import { BaseEdge, getStraightPath } from "@xyflow/react";
+
+
+
+const FamilyEdge = ({ id, sourceX, sourceY, targetX, targetY }) => {
+
+  const [edgePath] = getStraightPath({
+
+    sourceX,
+
+    sourceY,
+
+    targetX,
+
+    targetY,
+
+  });
+
+
+
+  return (
+
+    <BaseEdge
+
+      id={id}
+
+      path={edgePath}
+
+      style={{
+
+        stroke: "#8E8E93",
+
+        strokeWidth: 2,
+
+      }}
+
+    />
+
+  );
+
+};
+
+
+
+export default FamilyEdge; "
