@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import Button from "../Button";
+import AlertToaster from "../toasters/AlertToaster";
+import baseUrl from "../../utilities/BaseURL";
 
 const EventForm = ({ event, onClick }) => {
+  const [submitted, setSubmitted] = useState(false)
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "hello world",
+    status: ""
+  })
+
   const [input, setInput] = useState({
     title: event?.title ?? event?.celebrant ?? "",
     type: event?.type ?? "",
@@ -15,13 +24,79 @@ const EventForm = ({ event, onClick }) => {
     const name = event.target.name;
     const value = event.target.value;
 
-    setInput((prev)=>({...prev, [name]:value}))
+    setInput((prev) => ({ ...prev, [name]: value }))
   }
 
+
   const handleSubmit = (event) => {
-    event.preventDefault();
-    alert("submitted")
+    event.preventDefault()
+
+    if (!input.title ||
+      !input.type || !input.date ||
+      !input.time || !input.description) {
+
+      setShowAlert((prev) => ({
+        ...prev,
+        show: true,
+        message: "please fill al required field!"
+      }))
+
+      return
+    }
+
+    setSubmitted(true)
+    const createEvent = async () => {
+      try {
+        const request = await fetch(`${baseUrl}/create-event`, {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json"
+          },
+          body: JSON.stringify(input)
+        })
+
+        const res = await request.json()
+
+        if (res.status === "success") {
+          setShowAlert((prev) => ({
+            ...prev,
+            show: true,
+            message: request.message,
+            status: "success"
+          }))
+          setSubmitted(false)
+          navigate("/dashboard/events")
+          return
+        }
+
+        setSubmitted(false)
+        return (
+          setShowAlert((prev) => ({
+            ...prev,
+            show: true,
+            message: res.message,
+            status: "failed"
+          }))
+
+        )
+
+      } catch (error) {
+
+        setSubmitted(false)
+        return (setShowAlert((prev) => ({
+          ...prev,
+          show: true,
+          message: error.message,
+          status: "failed"
+        })))
+      }
+    }
+
+    createEvent()
+
+
   }
+
 
   return (
     <div className="bg-[#E9F1FA] py-4 px-5 w-full rounded-xl md:w-96">
@@ -33,7 +108,7 @@ const EventForm = ({ event, onClick }) => {
         <h1 className="text-[#2E5E99] text-2xl flex justify-center font-semibold">
           Add Event
         </h1>
-        <form className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <div className="relative w-full">
             <input
               type="text"
@@ -106,8 +181,8 @@ const EventForm = ({ event, onClick }) => {
             <label
               htmlFor="eventType"
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none transition-all duration-200
-      peer-focus:top-0 peer-focus:text-xs peer-focus:font-semibold peer-focus:text-blue-500 peer-focus:px-1
-      peer-valid:top-0 peer-valid:text-xs peer-valid:font-semibold peer-valid:text-blue-500 peer-valid:px-1">
+                    peer-focus:top-0 peer-focus:text-xs peer-focus:font-semibold peer-focus:text-blue-500 peer-focus:px-1
+                    peer-valid:top-0 peer-valid:text-xs peer-valid:font-semibold peer-valid:text-blue-500 peer-valid:px-1">
               Select Event Type
             </label>
 
@@ -200,10 +275,21 @@ const EventForm = ({ event, onClick }) => {
           </div>
 
           <div>
-            <Button primary text="Save Event" />
+            <Button primary text="Save Event" type="submit" loading={submitted} />
           </div>
         </form>
       </div>
+      {showAlert.show && (
+        <div>
+          <AlertToaster
+            show={showAlert.show}
+            message={showAlert.message}
+            status={showAlert.status}
+            duration={5000}
+            onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+          />
+        </div>
+      )}
     </div>
   );
 };

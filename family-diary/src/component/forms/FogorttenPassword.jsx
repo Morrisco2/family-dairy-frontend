@@ -3,16 +3,21 @@ import Button from "../Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import ModalButton from "../ModalButton";
 import BackgroundGradient from "../../utilities/BackgroundGradient";
+import AlertToaster from "../toasters/AlertToaster";
 
 const FogorttenPassword = () => {
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [failed, setFailed] = useState(false);
   const [message, setMessage] = useState("");
   const [input, setInput] = useState({
     email: localStorage.getItem("email") || "",
   });
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  })
   const [verificationStatus, setVerificationStatus] = useState("idle");
   // idle | loading | success | error
   const [verificationMessage, setVerificationMessage] = useState("");
@@ -139,9 +144,11 @@ const FogorttenPassword = () => {
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (!input.email) {
-      setFailed(true);
-      setMessage("Email field is empty");
-
+      setShowAlert((prev)=>({
+        ...prev, show:true,
+        message: "Please enter your email",
+        status: "failed"
+      }))
       return;
     }
 
@@ -161,9 +168,7 @@ const FogorttenPassword = () => {
           Reset Password
         </h1>
         <div>
-          {failed && (
-            <p className={"text-red-600 text-lg  animate-bounce"}>{message}</p>
-          )}
+         
         </div>
         <form onSubmit={handleInputSubmit}>
           <div className="relative w-80 mt-10">
@@ -216,9 +221,9 @@ const FogorttenPassword = () => {
             <h1 className="text-xl  mb-7   font-bold text-[#2E5E99]">
               enter the token sent to your email
             </h1>
-          
+
             <div className="mt-3 flex gap-3 justify-center">
-             
+
 
               {otp.map((digit, index) => (
                 <input
@@ -256,13 +261,12 @@ const FogorttenPassword = () => {
                   className={`w-28 h-28 rounded-full flex items-center justify-center
       transition-all duration-500 scale-100 animate-pulse
 
-      ${
-        verificationStatus === "success"
-          ? "bg-green-500"
-          : verificationStatus === "error"
-            ? "bg-red-500"
-            : "bg-[#2E5E99]"
-      }`}>
+      ${verificationStatus === "success"
+                      ? "bg-green-500"
+                      : verificationStatus === "error"
+                        ? "bg-red-500"
+                        : "bg-[#2E5E99]"
+                    }`}>
                   {verificationStatus === "loading" ? (
                     <svg
                       className="animate-spin w-12 h-12 text-white"
@@ -312,13 +316,12 @@ const FogorttenPassword = () => {
                 </div>
 
                 <p
-                  className={`absolute mt-40 text-lg font-semibold ${
-                    verificationStatus === "success"
+                  className={`absolute mt-40 text-lg font-semibold ${verificationStatus === "success"
                       ? "text-green-600"
                       : verificationStatus === "error"
                         ? "text-red-600"
                         : "text-[#2E5E99]"
-                  }`}>
+                    }`}>
                   {verificationStatus === "loading"
                     ? "Verifying..."
                     : verificationMessage}
@@ -326,6 +329,19 @@ const FogorttenPassword = () => {
               </div>
             )}
           </form>
+
+        </div>
+      )}
+
+      {showAlert.show && (
+        <div>
+          <AlertToaster
+            show={showAlert.show}
+            message={showAlert.message}
+            status={showAlert.status}
+            duration={5000}
+            onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+          />
         </div>
       )}
     </div>

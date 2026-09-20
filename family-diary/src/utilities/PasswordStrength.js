@@ -1,5 +1,4 @@
 export const PasswordStrength = (password ) => {
-    console.log(password);
     
  const checks = {
     length: password.length >= 8,

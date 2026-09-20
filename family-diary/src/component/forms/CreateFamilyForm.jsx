@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import Button from "../Button";
-import BackgroundGradient from "../../utilities/BackgroundGradient";
 import { useNavigate } from "react-router-dom";
+import AlertToaster from "../toasters/AlertToaster";
+import baseUrl from "../../utilities/BaseURL";
 
 const CreateFamilyForm = ({ setCreateFamily }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState("success");
-  const [message, setMessage] = useState("");
-  const [created, setCreated] = useState(false);
   const [input, setInput] = useState({ familyName: "" });
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  })
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -21,23 +24,95 @@ const CreateFamilyForm = ({ setCreateFamily }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    setCreated(true);
 
-    navigate("/dashboard");
+    if (!input.familyName) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "please enter family name!",
+        status: "failed"
+      }))
+      setLoading(false);
+
+      return
+    }
+
+    if (!input.familyName.toLowerCase().includes("family")) {
+      setShowAlert((prev)=>({
+        ...prev, show: true,
+        message:"name must include the word 'Family' !",
+        status: "failed"
+      }))
+
+      setLoading(false);
+      return
+    }
+
+    if (input.familyName.toLowerCase() === "family") {
+      setShowAlert((prev)=>({
+        ...prev, show: true,
+        message: "name can't be the word 'family' alone ",
+        status:"failed"
+      }))
+
+      setLoading(false);
+      return
+    }
+
+
+    const createFamily = async ()=>{
+      try {
+        const request = await fetch(`${baseUrl}/create-new-family`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(input)
+        })
+
+        const res = await request.json();
+
+        if (res.status === "success") {
+          setShowAlert((prev)=>({
+            ...prev,
+            show: true,
+            message: res.message,
+            status: "success"
+          }))
+
+          navigate("/dashboard")
+          return
+        }
+
+        setShowAlert((prev)=>({
+          ...prev, 
+          show:true,
+          message: res.message,
+          status: "failed"
+        }))
+        setLoading(false)
+        return
+      } catch (error) {
+        setShowAlert((prev)=>({
+          ...prev, show: true,
+          message: error.message,
+          status: "failed"
+        }))
+
+        setLoading(false)
+        return
+      }
+    }
+
+
+    createFamily()
+
+    // navigate("/dashboard");
   };
   return (
     <div
       className={`bg-[#E9F1FA] py-5 flex flex-col gap-6 px-5 rounded-2xl overflow-hidden `}>
       <div className="text-[#2E5E99] text-xl  flex items-center justify-end">
-        {created && (
-          <div
-            className={`fixed top-10  min-w-80 max-w-screen py-1 px-2  ${status === "success" ? "text-green-800 bg-green-200 " : "bg-red-200 text-red-800"}`}>
-            <p className="flex w-full  justify-center items-center">
-              Created <span className="ml-5"> Loading...</span>{" "}
-              <div className="h-4 w-4 border-2 border-r-transparent rounded-full animate-spin"></div>
-            </p>
-          </div>
-        )}
+
         <button onClick={() => setCreateFamily(false)}>
           <FaTimes />
         </button>
@@ -85,6 +160,17 @@ const CreateFamilyForm = ({ setCreateFamily }) => {
           />
         </div>
       </form>
+      {true && (
+        <div>
+          <AlertToaster
+            show={showAlert.show}
+            status={showAlert.status}
+            message={showAlert.message}
+            duration={5000}
+            onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+          />
+        </div>
+      )}
     </div>
   );
 };

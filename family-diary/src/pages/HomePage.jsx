@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from "react";
-import { FaUsers, FaCalendarCheck, FaClipboardList } from "react-icons/fa";
+import { FaClipboardList } from "react-icons/fa";
 
 import WelcomeHeader from "../component/WelcomeHeader";
 import ProfileCard from "../component/ProfileCard";
@@ -13,12 +13,15 @@ import EventDetailsModal from "../component/EventsAndModals/EventDetailsModal";
 
 import eventsDemoData from "../utilities/eventsDemoData";
 import { user } from "../utilities/userDemoData";
+import ListSkeleton from "../component/loaders/skeletonComponent/ListSkeleton";
+import SendWishForm from "../component/forms/SendWishForm";
 
 const HomePage = () => {
-  const loaded = true;
-  const empty = false;
+  let loaded = true;
+  let empty = false;
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [openWishModal, setOpenWishModal] = useState(false)
 
   const handleSelectEvent = useCallback((event) => {
     setSelectedEvent(event);
@@ -47,53 +50,93 @@ const HomePage = () => {
     <div className="py-3 px-4 flex flex-col gap-6 min-h-screen pb-48">
       <WelcomeHeader />
 
-      {loaded ? (
-        <ProfileCard homePage today user={user[0]} />
+      {!loaded ? (
+        <ProfileCardSkeleton forHome forEvent={false}/>
       ) : (
-          
-        <ProfileCardSkeleton forHome forEvent={false} />
+
+        <ProfileCard homePage today user={user[0]} onClick={()=>setOpenWishModal(true)} />
       )}
 
       <div className="flex justify-center gap-2">
-        {loaded ? (
+        {!loaded ? (
           <>
-            <TotalValueCard title="Total Incident" icon={<FaClipboardList />} />
+            <TotalCardSkeleton />
           </>
         ) : (
-          <TotalCardSkeleton />
+          <TotalValueCard title="Total Incident" icon={<FaClipboardList />} />
         )}
       </div>
 
       <div className="mt-3">
-        <EventSection
-          title="Upcoming Birthday"
-          emptyText="No Event Found"
-          data={upComingBirthday}
-          loaded={loaded}
-          empty={empty}
-          onSelect={handleSelectEvent}
-        />
+        {!loaded ? (
+          <div>
+            <h2 className="text-2xl font-semibold text-[#2E5E99] mb-4">Upcoming Birthday</h2>
+            <ListSkeleton />
+          </div>
+        ) : (
+          <div>
+            <EventSection
+              title="Upcoming Birthday"
+              emptyText="No Event Found"
+              data={upComingBirthday}
+              loaded={loaded}
+              empty={empty}
+              onSelect={handleSelectEvent}
+            />
+          </div>
+        )}
       </div>
 
-      <EventSection
-        title="Upcoming Events"
-        emptyText="No Meeting Found"
-        data={upcomingEvents}
-        loaded={loaded}
-        empty={empty}
-        onSelect={handleSelectEvent}
-      />
+      <div className="mt-3">
+        {!loaded ? (
+          <div>
+            <h2 className="text-2xl font-semibold text-[#2E5E99] mb-4">Upcoming Events</h2>
+            <ListSkeleton />
+          </div>
+        ) : (
+          <div>
+            <EventSection
+              title="Upcoming Events"
+              emptyText="No Meeting Found"
+              data={upcomingEvents}
+              loaded={loaded}
+              empty={empty}
+              onSelect={handleSelectEvent}
+            />
 
-      <EventSection
-        title="Incidents"
-        emptyText="No Incident Found"
-        data={incidents}
-        loaded={loaded}
-        empty={empty}
-        onSelect={handleSelectEvent}
-      />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-3">
+        {!loaded ? (
+          <div>
+            <h2 className="text-2xl font-semibold text-[#2E5E99] mb-4">Incidents</h2>
+            <ListSkeleton />
+          </div>
+        ) : (
+          <div>
+            <EventSection
+              title="Incidents"
+              emptyText="No Incident Found"
+              data={incidents}
+              loaded={loaded}
+              empty={empty}
+              onSelect={handleSelectEvent}
+            />
+
+
+          </div>
+        )}
+      </div>
+
 
       <EventDetailsModal event={selectedEvent} onClose={handleCloseModal} />
+      {openWishModal && (
+        <div className="fixed inset-0   bg-black/50 z-999 flex justify-center items-center px-4 animate-modal overflow-scroll">
+          <SendWishForm closeModal = {setOpenWishModal} celebrant = {user[0]}/>
+        </div>
+      )}
     </div>
   );
 };

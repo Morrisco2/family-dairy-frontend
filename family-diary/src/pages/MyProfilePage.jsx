@@ -1,7 +1,6 @@
-import React, { use, useState } from "react";
+import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import {
-  FaCalendarAlt,
   FaCalendarCheck,
   FaEdit,
   FaUnlockAlt,
@@ -15,12 +14,16 @@ import { user } from "../utilities/userDemoData";
 import ProfileCardSkeleton from "../component/loaders/skeletonComponent/ProfileCardSkeleton";
 import Button from "../component/Button";
 import { useNavigate } from "react-router-dom";
+import { handleImageUpload } from "../utilities/imageUpload";
+import AlertToaster from "../component/toasters/AlertToaster";
+import baseUrl from "../utilities/BaseURL";
 
 const MyProfilePage = () => {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(true);
   const [editPicture, setEditPicture] = useState(false);
   const [editDetail, setEditDetail] = useState(false);
+  const [profileImage, setProfileImage] = useState({ image: null })
   const [input, setInput] = useState({
     name: user[0].name || "",
     email: user[0].email || "",
@@ -28,6 +31,13 @@ const MyProfilePage = () => {
     dob: user[0].dob || "",
     role: user[0].role || "",
   });
+
+
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  })
   const [loading, setLoading] = useState(false)
 
   const handleChangePassword = () => {
@@ -41,6 +51,142 @@ const MyProfilePage = () => {
     const value = event.target.value;
     setInput((prev) => ({ ...prev, [name]: value }));
   };
+
+  // handle image submission
+  const handleSubmitImage = (event) => {
+    event.preventDefault();
+    setLoading(true)
+
+    if (profileImage.image == null) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "No image selected!",
+        status: "failed"
+      }))
+      setLoading(false)
+      return
+    }
+
+    const uploadImage = async () => {
+      try {
+        const request = await fetch(`${baseUrl}/upload-image`, {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json"
+          },
+          body: JSON.stringify(profileImage)
+        })
+
+
+        const res = await request.json()
+
+        if (res.status === "success") {
+          setShowAlert((prev) => ({
+            ...prev, show: true,
+            message: res.message,
+            status: "success"
+          }))
+
+          setLoading(false);
+          setEditPicture(false)
+          return
+        }
+
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: res.message,
+          status: "failed"
+        }))
+        setLoading(false);
+
+      } catch (error) {
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: error.message,
+          status: "failed"
+        }))
+
+        setLoading(false)
+      }
+
+
+    }
+
+    uploadImage()
+
+  }
+
+
+  // handle edit profile details submission
+  const handleSubmitEditProfile = (event) => {
+    event.preventDefault();
+    setLoading(true)
+
+    if (input.name === user[0].name &&
+      input.email === user[0].email &&
+      input.phone === user[0].phone &&
+      input.dob === user[0].dob &&
+      input.role === user[0].role
+    ) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "No changes made",
+        status: "failed"
+      }))
+
+      setLoading(false)
+      return
+    }
+
+    const saveEditedProfileChanges = async () => {
+      try {
+        const request = await fetch(`${baseUrl}/save-profile-changes`, {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json"
+          },
+          body: JSON.stringify(input)
+        })
+
+        const res = await request.json();
+
+        if (res.status === "success") {
+          location.reload()
+          setShowAlert((prev) => ({
+            ...prev, show: true,
+            message: res.message,
+            statue: "success"
+          }))
+
+          setLoading(false)
+          return
+        }
+
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: res.message,
+          status: "failed"
+        }))
+
+        setLoading(false)
+        return
+
+      } catch (error) {
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: error.message,
+          status: "failed"
+        }))
+
+        setLoading(false)
+        return
+      }
+    }
+
+    saveEditedProfileChanges()
+
+  }
+
   return (
     <div className="px-4 py-5 flex flex-col gap-5">
       <div>
@@ -129,7 +275,7 @@ const MyProfilePage = () => {
         </div>
       </div>
 
-      {/* MY PRECIOUS MODALS STARTS FROM HERE */}
+      {/* MY EDIT PROFILE PICTURE MODALS STARTS FROM HERE */}
       {editPicture && (
         <div className="fixed inset-0 bg-black/50 md:px-98 z-999 animate-modal px-4 flex justify-center items-center ">
           <div className="bg-[#E9F1FA] md:w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
@@ -141,7 +287,7 @@ const MyProfilePage = () => {
                 <FaTimes />
               </button>
             </div>
-            <form className="flex flex-col gap-6">
+            <form className="flex flex-col gap-6" onSubmit={handleSubmitImage}>
               <div className="relative w-80">
                 <label className="font-semibold " htmlFor="image">
                   Upload Image
@@ -150,11 +296,13 @@ const MyProfilePage = () => {
                 <input
                   id="image"
                   type="file"
+                  name="image"
+                  onChange={(e) => handleImageUpload(e, setProfileImage, setShowAlert)}
                   className="mt-2 w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md text-gray-400 flex "
                 />
               </div>
               <div>
-                <Button primary text="Upload" loading={loading} />
+                <Button primary text="Upload" type="submit" loading={loading} />
               </div>
             </form>
           </div>
@@ -174,7 +322,7 @@ const MyProfilePage = () => {
                 <FaTimes />
               </button>
             </div>
-            <form className="flex flex-col gap-6">
+            <form className="flex flex-col gap-6" onSubmit={handleSubmitEditProfile}>
               <div className="relative w-80">
                 <input
                   type="text"
@@ -287,10 +435,21 @@ const MyProfilePage = () => {
               </div>
 
               <div>
-                <Button primary text="Save Change" loading={loading} />
+                <Button primary text="Save Change" type="submit" loading={loading} />
               </div>
             </form>
           </div>
+
+        </div>
+      )}
+      {showAlert.show && (
+        <div>
+          <AlertToaster show={showAlert.show}
+            message={showAlert.message}
+            status={showAlert.status}
+            duration={4000}
+            onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+          />
         </div>
       )}
     </div>

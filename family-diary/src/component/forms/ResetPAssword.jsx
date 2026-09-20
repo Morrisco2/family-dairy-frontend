@@ -3,16 +3,142 @@ import { FiEye, FiEyeOff, FiLock } from "react-icons/fi";
 import PasswordShowSheet from "../../utilities/PasswordShowSheet";
 import BackgroundGradient from "../../utilities/BackgroundGradient";
 import Button from "../Button";
+import AlertToaster from "../toasters/AlertToaster";
+import { PasswordStrength } from "../../utilities/PasswordStrength";
+import baseUrl from "../../utilities/BaseURL";
+import { useNavigate } from "react-router-dom";
 
 const ResetPAssword = () => {
+  const [submitted, setSubmitted] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordSheet, setShowPasswordSheet] = useState(false);
   const [password, setPassword] = useState("");
   const [showCPassword, setShowCPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  })
+
+  const navigate = useNavigate()
+
+  const handleChangeConfirmPassword = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setConfirmPassword(value)
+
+  }
+
+  const passwordStrengthCheck = () => {
+    const strength = PasswordStrength(password).strength
+    if (strength < 5) {
+      return ({ pass: false, message: "weak password" })
+    }
+
+    return ({ pass: true, message: "strong password" })
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setSubmitted(true)
+
+    if (!password) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "please create new password",
+        status: "failed"
+      }))
+      setSubmitted(false)
+      return;
+    }
+    if (!passwordStrengthCheck().pass) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "Please Create a stronger password",
+        status: "failed"
+      }))
+      setSubmitted(false)
+      return
+    }
+    if (!confirmPassword) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "confirm the password",
+        status: "failed"
+      }))
+      setSubmitted(false)
+      return
+    }
+    if (password.toString().trim() !== confirmPassword.toString().trim()) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "Password Mismatch!",
+        status: "failed"
+
+      }))
+      setSubmitted(false)
+      return
+    }
+
+
+    const changePassword = async () => {
+      try {
+        const request = await fetch(`${baseUrl}/reset-password`, {
+          method: "PUT",
+          headers: {
+            "content-Type": "application/json",
+          },
+          body: JSON.stringify(password)
+        })
+
+        const res = await request.json();
+
+        if (res.status !== "success") {
+          setShowAlert((prev) => ({
+            ...prev, show: true,
+            message: res.message,
+            status: "failed"
+          }))
+
+          return;
+        }
+
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: res.message,
+          status: "success"
+        }))
+
+        navigate("/login");
+
+        return
+
+      } catch (error) {
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: error.message,
+          status: "failed"
+        }))
+
+        setSubmitted(false)
+
+        navigate("/login");
+        return
+      }
+    }
+
+    changePassword()
+
+
+  }
+
+
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-5 items-center">
           <BackgroundGradient />
           <div className="flex flex-col gap-2 items-center mt-10 mb-10">
@@ -24,6 +150,7 @@ const ResetPAssword = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               value={password}
+              name="password"
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setShowPasswordSheet(true)}
               onBlur={() => {
@@ -66,6 +193,9 @@ const ResetPAssword = () => {
             <input
               type={showCPassword ? `text` : `password`}
               id="confirmPassword"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={handleChangeConfirmPassword}
               placeholder=" "
               className="peer w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md"
             />
@@ -88,9 +218,21 @@ const ResetPAssword = () => {
           </div>
         </div>
         <div className="mt-10 px-6">
-          <Button primary text="Reset" type="submit" />
+          <Button primary text="Reset" loading={submitted} type="submit" />
         </div>
       </form>
+
+      {showAlert.show && (
+        <div>
+          <AlertToaster
+            show={showAlert.show}
+            message={showAlert.message}
+            status={showAlert.status}
+            duration={5000}
+            onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+          />
+        </div>
+      )}
     </div>
   );
 };

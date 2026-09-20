@@ -14,7 +14,7 @@ const FamilyListCard = ({
                     <h1 className="text-[#2E5E99] font-semibold text-lg">{familyName}</h1>
                     <div className="flex gap-2 items-center">
                         <div className="h-6 w-6 bg-[#2E5E99] rounded-full"></div>
-                        <p className="text-gray-600 text-sm">{leaderName} <span className="text-gray-800 font-semibold">(Leader)</span></p>
+                        <p className="text-gray-600 text-sm font-light">{leaderName} <span className="text-gray-800 font-semibold">(Leader)</span></p>
                     </div>
                 </div>
                 <div>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import WelcomeHeader from '../component/WelcomeHeader'
 import PageTitleCard from '../component/PageTitleCard'
 import ProfileCard from '../component/ProfileCard'
 import { FaEnvelope, FaPhone, FaTimes } from "react-icons/fa";
@@ -23,30 +22,26 @@ const MemberProfilePage = ({ setSelectedUser }) => {
           <h1 className="text-[#2E5E99] text-xl font-semibold">
             Additional Information
           </h1>
-          <div className="bg-[#D0DDED] py-4 px-3 rounded-2xl flex justify-between text-gray-600">
+          <div className="bg-[#D0DDED] py-4 px-3 mb-3 rounded-2xl flex justify-between text-gray-600">
             <p className="font-semibold">Birthday</p>
             <p>{setSelectedUser.dob}</p>
           </div>
-
-          <div className="py-4 flex gap-4 flex-col ">
-            <h1 className="text-[#2E5E99] text-xl font-semibold">
-              Contact Information
-            </h1>
-            <div className="bg-[#D0DDED] py-4 px-3 rounded-2xl flex flex-col gap-4  text-gray-600">
-              <div className="flex justify-between">
+          <div className="bg-[#D0DDED] py-5 px-3 mb-5 rounded-2xl flex flex-col gap-4  text-gray-600">
+              <div className="flex gap-4">
                 <p className="font-semibold flex items-center gap-2">
                   <FaEnvelope className="text-[#2E5E99] text-lg" />{" "}
                 </p>
                 <p>{setSelectedUser.email}</p>
               </div>
-              <div className="flex justify-between">
+              <div className="flex gap-4">
                 <p className="font-semibold">
                   <FaPhone className="text-[#2E5E99] text-lg " />
                 </p>
                 <p>{setSelectedUser.phone}</p>
               </div>
             </div>
-          </div>
+
+        
           <div className="flex items-center gap-3">
             <button
               onClick={() => setOpenDelete(true)}

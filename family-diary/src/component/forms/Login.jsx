@@ -3,16 +3,19 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import Button from "../Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import BackgroundGradient from "../../utilities/BackgroundGradient";
+import AlertToaster from "../toasters/AlertToaster";
 
 const Login = () => {
   const navigate = useNavigate();
   const [input, setInput] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  })
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -23,14 +26,23 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     if (!input.email || !input.password) {
       setLoading(false);
-      setStatus("failed");
-      setMessage("Fill the Form Completely");
+      setShowAlert((prev) => ({
+        ...prev,
+        show: true,
+        message: "enter your email and password",
+        status: "failed"
+
+      }))
       return;
     }
     setLoading(true);
+    setShowAlert((prev)=> ({
+      ...prev, show: true,
+      message: "Login successful",
+    status: "success"}))
     navigate("/join-family");
   };
 
@@ -50,10 +62,13 @@ const Login = () => {
         </div>
         {status === "failed" && (
           <div className="flex justify-center ">
-            <p
-              className={`text-red-600 animate-bounce bg-red-50 py-2 items-center w-full flex justify-center rounded-lg shadow-sm shadow-red-300  font-semibold}`}>
-              {message}
-            </p>
+            <AlertToaster
+              show={showAlert.show}
+              message={showAlert.message}
+              status={showAlert.status}
+              duration={5000}
+              onClose={()=>setShowAlert((prev)=>({...prev, show:false}))}
+               />
           </div>
         )}
         <div className="flex flex-col gap-7">
