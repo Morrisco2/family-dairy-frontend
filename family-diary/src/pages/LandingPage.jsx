@@ -1,13 +1,6 @@
 import { NavLink } from "react-router-dom";
 
 import Button from "../component/Button";
-import EventCard from "../component/EventCard";
-import EventList from "../component/EventList";
-import FamilyListCard from "../component/FamilyListCard";
-import Login from "../component/forms/Login";
-import RegistrationForm from "../component/forms/RegistrationForm";
-import Navbar from "../component/staticComponents/Navbar";
-import MemberCard from "../component/MemberCard";
 import { useState } from "react";
 import SpinLoader from "../component/loaders/SpinLoader";
 

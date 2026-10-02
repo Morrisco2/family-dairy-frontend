@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FaListAlt } from "react-icons/fa";
-import BackgroundGradient from "../utilities/BackgroundGradient";
 import WelcomeHeader from "../component/WelcomeHeader";
 import SearchBar from "../component/SearchBar";
 import FamilyListCard from "../component/FamilyListCard";
@@ -81,7 +79,7 @@ const JoinFamilyPage = () => {
 
       {createFamily && (
         <div
-          className="animate-modal fixed inset-0 bg-black/50 flex px-4 justify-center items-center">
+          className="animate-modal fixed inset-0  bg-black/50 flex px-4 justify-center items-center">
           <div className="">
             <CreateFamilyForm setCreateFamily={setCreateFamily} />
           </div>

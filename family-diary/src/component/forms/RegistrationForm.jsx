@@ -1,7 +1,7 @@
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { PasswordStrength } from "../../utilities/PasswordStrength";
@@ -16,12 +16,11 @@ const RegistrationForm = () => {
   const [showCPassword, setShowCPassword] = useState(false);
   const [showPasswordSheet, setShowPasswordSheet] = useState(false);
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("")
   const [cPassword, setCpassword] = useState("");
   const [showAlert, setShowAlert] = useState({
     show: false,
     message: "",
-    status: ""
+    status: null
   })
   const [input, setInput] = useState({
     name: "".toString().trim(),
@@ -30,7 +29,8 @@ const RegistrationForm = () => {
     dob: "".toString().trim(),
     role: "".toString().trim(),
     password: "".toString().trim(),
-    image: null
+    image: null,
+    trems: ""
   })
 
   const navigate = useNavigate()
@@ -41,12 +41,16 @@ const RegistrationForm = () => {
 
   // handle input change
   const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
+    const { name, value, type, checked } = event.target;
 
-    setInput((prev) => ({ ...prev, [name]: value }))
+    setInput((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
 
-  }
+  };
+
+
 
   // Validate the input fields
   const inputValidator = () => {
@@ -62,8 +66,7 @@ const RegistrationForm = () => {
         status: "failed"
       }))
       return ({ pass: false })
-    } else {
-      if (PasswordStrength(password).strength < 5) {
+    } else  if (PasswordStrength(password).strength < 5) {
         setShowAlert((prev) => ({
           ...prev, show: true,
           message: "Create a stronger password",
@@ -71,22 +74,32 @@ const RegistrationForm = () => {
 
         }))
         return ({ pass: false })
-      } else {
-        if (password.toString().trim() !== cPassword.toString().trim()) {
-          setShowAlert((prev) => ({
-            ...prev,
-            show: true,
-            message: "Password mismatch!",
-            status: "failed",
+      } else if (password.toString().trim() !== cPassword.toString().trim()) {
+        setShowAlert((prev) => ({
+          ...prev,
+          show: true,
+          message: "Password mismatch!",
+          status: "failed",
 
-          }))
-          return ({ pass: false })
-        }
+        }))
 
-      }
+        return ({ pass: false })
+      } else if (input.terms !== true) {
+            setShowAlert((prev)=>({
+              ...prev,
+              show: true,
+              message: "Please accept the terms and conditions",
+              status: "failed"
+            }))
+
+            return ({ pass: false })
+          }
+  
+
+
 
       return ({ pass: true })
-    }
+    
 
 
 
@@ -141,8 +154,8 @@ const RegistrationForm = () => {
 
 
       } catch (error) {
-        setShowAlert((prev)=>({
-          ...prev, show:true,
+        setShowAlert((prev) => ({
+          ...prev, show: true,
           message: error.message,
           status: "failed"
         }))
@@ -392,12 +405,43 @@ const RegistrationForm = () => {
                 className="mt-2 w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md text-gray-400 flex "
               />
             </div>
+            <div className="flex items-start w-full text-sm">
+              <input
+                type="checkbox"
+                name="terms"
+                checked={input.terms}
+                onChange={handleChange}
+                id="terms"
+                className="mt-1.5 shrink-0 w-4 h-4 accent-[#2E5E99] cursor-pointer"
+              />
 
+              <label
+                htmlFor="terms"
+                className="text-gray-500 leading-5 min-w-0 break-words  ml-2"
+              >
+                I agree to the{" "}
+                <NavLink
+                  to="/legal#terms"
+                  className="text-[#2E5E99] font-semibold underline"
+                >
+                  Terms & Conditions
+                </NavLink>{" "}
+                and{" "}
+                <br />
+                <NavLink
+                  to="/legal#privacy"
+                  className="text-[#2E5E99] font-semibold underline"
+                >
+                  Privacy Policy
+                </NavLink>
+                .
+              </label>
+            </div>
             <div className=" w-80">
               <Button text="Register" primary type="submit" />
             </div>
 
-            <p className="text-gray-500">
+            <p className="text-gray-500 ">
               Already have an account?{" "}
               <NavLink
                 to={"/login"}

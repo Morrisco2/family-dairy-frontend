@@ -220,7 +220,7 @@ const MyProfilePage = () => {
           </h1>
           <button
             onClick={() => setEditDetail(true)}
-            className="bg-amber-300 p-2 px-3 text-xl">
+            className="bg-[#2E5E99] text-gray-50 p-2 px-3 text-xl">
             <FaEdit />
           </button>
         </div>

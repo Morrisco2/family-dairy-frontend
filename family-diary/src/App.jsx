@@ -17,17 +17,15 @@ import HomePage from "./pages/HomePage";
 import FogorttenPassword from "./component/forms/FogorttenPassword";
 import ResetPAssword from "./component/forms/ResetPAssword";
 import NotFound from "./pages/NotFound";
-import CreateFamilyForm from "./component/forms/CreateFamilyForm";
 import DashboardLayout from "./layouts/DashboardLayout";
 import FamilyMemberPage from "./pages/FamilyMemberPage";
 import EventsPage from "./pages/EventsPage";
-import IncidentPage from "./pages/IncidentPage";
 import AddFamilyMember from "./component/AddFamilyMember";
 import NotificationPage from "./pages/NotificationPage";
 import HistoryPage from "./pages/HistoryPage";
-import MemberProfilePage from "./pages/MemberProfilePage";
 import MyProfilePage from "./pages/MyProfilePage";
 import NetworkBanner from "./component/network/NetworkBanner";
+import LegalAndPolicies from "./pages/legal/LegalAndPolicies";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,13 +37,13 @@ const router = createBrowserRouter(
         <Route path="/reset-password" element={<ResetPAssword />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/join-family" element={<JoinFamilyPage />} />
+        <Route path="/legal" element={<LegalAndPolicies />} />
       </Route>
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route element={<AnimatedLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/dashboard/members" element={<FamilyMemberPage />} />
           <Route path="/dashboard/events" element={<EventsPage />} />
-          {/* <Route path="/dashboard/incidence" element={<IncidentPage />} /> */}
           <Route path="/dashboard/history" element={<HistoryPage />} />
           <Route path="/dashboard/add-member" element={<AddFamilyMember />} />
           <Route
