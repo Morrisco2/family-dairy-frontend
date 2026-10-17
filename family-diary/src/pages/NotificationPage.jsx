@@ -3,50 +3,15 @@ import { FaTimes } from "react-icons/fa";
 import BackgroundGradient from "../utilities/BackgroundGradient";
 import PageTitleCard from "../component/PageTitleCard";
 import Notification from "../component/Notification";
+import notification from "../utilities/notificationFetch";
 
 const NotificationPage = () => {
   const [open, setOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const notification = [
-    {
-      id: 1,
-      title: "Birthday Reminder",
-      text: "Tomorrow is Morrison Samuel’s Birthday, Please endavour to send him your wishes",
-      time: "2 hrs ago",
-      status: "unread",
-    },
-    {
-      id: 1,
-      title: "Birthday Reminder",
-      text: "Tomorrow is Morrison Samuel’s Birthday, Please endavour to send him your wishes",
-      time: "2 hrs ago",
-      status: "read",
-    },
-    {
-      id: 1,
-      title: "Birthday Reminder",
-      text: "Tomorrow is Morrison Samuel’s Birthday, Please endavour to send him your wishes",
-      time: "2 hrs ago",
-      status: "unread",
-    },
-    {
-      id: 1,
-      title: "Birthday Reminder",
-      text: "Tomorrow is Morrison Samuel’s Birthday, Please endavour to send him your wishes",
-      time: "2 hrs ago",
-      status: "read",
-    },
-    {
-      id: 1,
-      title: "Birthday Reminder",
-      text: "Tomorrow is Morrison Samuel’s Birthday, Please endavour to send him your wishes",
-      time: "2 hrs ago",
-      status: "unread",
-    },
-  ];
+  
   return (
-    <div className="px-4 py-4 min-h-screen flex flex-col gap-4">
+    <div className="px-4 py-4 pb-20 min-h-screen flex flex-col gap-4">
       <div>
         <PageTitleCard title="Notification" icon />
       </div>

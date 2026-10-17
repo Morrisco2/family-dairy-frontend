@@ -1,9 +1,10 @@
-import React, {useState}  from 'react'
+import React, { useState } from 'react'
 import StartHistoryModal from '../component/historyModals/StartHistoryModal'
 import WelcomeHeader from '../component/WelcomeHeader'
-import AlertToaster from '../component/toasters/AlertToaster';
 import AddHistoryForm from '../component/historyModals/AddHistoryForm';
 import FamilyTreePage from './FamilyTreePage';
+import GeneologyHistory from '../component/GeneologyHistory';
+import GenealogyHistoryPage from '../component/history/GenealogyHistoryPage';
 
 const HistoryPage = () => {
   const startWith = localStorage.getItem("startWith");
@@ -24,15 +25,10 @@ const HistoryPage = () => {
 
       <FamilyTreePage />
 
-      {/* <button onClick={() => setShowToast(true)}>Show Toast</button>
+      <div className='py-10'>
+        <GenealogyHistoryPage />
+      </div>
 
-      <AlertToaster
-        show={showToast}
-        status="failed"
-        message="Failed to load the resources"
-        duration={3000}
-        onClose={() => setShowToast(false)}
-      /> */}
     </div>
   );
 }

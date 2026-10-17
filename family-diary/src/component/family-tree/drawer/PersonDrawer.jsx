@@ -46,34 +46,28 @@ useEffect(() => {
               <div className="text-gray-500">
                 <FaUser />
               </div>
-              <p className="text-lg font-medium text-gray-900">{person.name}</p>
+              <p className="text-lg font-medium text-gray-900">{person.name + ` (${person.gender.slice(0,1).toUpperCase()})`}</p>
             </div>
 
             <div className="flex gap-4 items-center">
               <div className="text-gray-500">
                 <FaBirthdayCake />
               </div>
-              <p className="text-[#2E5FA7] flex justify-between w-full ">
+              <p className="text-[#2E5FA7] flex gap-3 w-full ">
                 <span className="text-gray-500">{person.birthYear}</span>
-                {!age ? person.birthYear : age} old
+               ({!age ? person.birthYear : age})
               </p>
             </div>
 
             <div className="flex justify-between">
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-sm text-gray-500">Gender</p>
-                <p className="capitalize text-gray-800">{person.gender}</p>
-              </div>
+            
 
-              <div className="flex flex-col items-center gap-1">
+              <div className="flex  items-center gap-1">
                 <p className="text-sm text-gray-500">Children</p>
                 <p className="text-gray-800">{person.children?.length || 0}</p>
               </div>
 
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-sm text-gray-500">Parents</p>
-                <p className="text-gray-800">{person.parents?.length || 0}</p>
-              </div>
+           
             </div>
           </div>
 

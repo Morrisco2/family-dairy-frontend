@@ -18,11 +18,38 @@ const JoinFamilyPage = () => {
   const [loaded, setLoaded] = useState(true);
   const [createFamily, setCreateFamily] = useState(false);
 
+  const families = [
+    {
+      familyName: "Morrison's Family",
+      leaderImg: "/images/uffikairo.jpg",
+      leaderName: "Uffikairo Morrison"
+    },
+    {
+      familyName: "Morrison's Family",
+      leaderImg: "/images/uffikairo.jpg",
+      leaderName: "Uffikairo Morrison"
+    },
+    {
+      familyName: "Morrison's Family",
+      leaderImg: "/images/uffikairo.jpg",
+      leaderName: "Uffikairo Morrison"
+    },
+    {
+      familyName: "Morrison's Family",
+      leaderImg: "/images/uffikairo.jpg",
+      leaderName: "Uffikairo Morrison"
+    },
+    {
+      familyName: "Morrison's Family",
+      leaderImg: "/images/uffikairo.jpg",
+      leaderName: "Uffikairo Morrison"
+    },
+  ]
+
   return (
-    <div className="flex flex-col gap-8 px-4 overflow-hidden pb-40">
+    <div className="flex flex-col gap-8 px-4 py-5 overflow-hidden pb-40">
 
       <div className="w-full flex flex-col gap-2">
-        <WelcomeHeader />
         <h1 className="text-lg text-[#2E5E99] mt-3">
           Join Or Create New Family
         </h1>
@@ -48,10 +75,19 @@ const JoinFamilyPage = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-5">
-                  <FamilyListCard />
-                  <FamilyListCard />
-                  <FamilyListCard />
-                  <FamilyListCard />
+                  {
+                    families.map((family, key) => (
+                      <div key={key}>
+                        <FamilyListCard 
+                        familyName={family.familyName} 
+                        leaderName={family.leaderName} 
+                        image={family.leaderImg}
+                        
+                        />
+
+                      </div>
+                    ))
+                  }
                 </div>
               )}
             </div>
@@ -70,7 +106,7 @@ const JoinFamilyPage = () => {
           primary
           text={`${loading ? "Creating.." : "Create Family"}`}
           icon
-          loading = {loading}
+          loading={loading}
           onClick={() => {
             (setCreateFamily(true), console.log("hello"));
           }}

@@ -139,7 +139,7 @@ const ResetPAssword = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-5 items-center">
+        <div className="flex flex-col gap-5 items-center min-h-screen   justify-start py-5  relative overflow-hidden">
           <BackgroundGradient />
           <div className="flex flex-col gap-2 items-center mt-10 mb-10">
             <FiLock className="text-7xl text-[#2E5E99]" />
@@ -216,9 +216,9 @@ const ResetPAssword = () => {
               {showCPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
             </button>
           </div>
-        </div>
-        <div className="mt-10 px-6">
-          <Button primary text="Reset" loading={submitted} type="submit" />
+          <div className="mt-10  relative  w-80">
+            <Button primary text="Reset" loading={submitted} type="submit" />
+          </div>
         </div>
       </form>
 

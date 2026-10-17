@@ -7,6 +7,10 @@ import {
   FaPhoneAlt,
   FaRegEnvelope,
   FaTimes,
+  FaQuestion,
+  FaPhone,
+  FaEnvelope,
+  FaHandsHelping,
 } from "react-icons/fa";
 import ProfileCard from "../component/ProfileCard";
 import PageTitleCard from "../component/PageTitleCard";
@@ -17,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { handleImageUpload } from "../utilities/imageUpload";
 import AlertToaster from "../component/toasters/AlertToaster";
 import baseUrl from "../utilities/BaseURL";
+import ContactSupportForm from "../component/forms/ContactSupportForm";
 
 const MyProfilePage = () => {
   const navigate = useNavigate();
@@ -39,6 +44,7 @@ const MyProfilePage = () => {
     status: ""
   })
   const [loading, setLoading] = useState(false)
+  const [contactForm,setContactForm] = useState(false)
 
   const handleChangePassword = () => {
     const email = user[0].email;
@@ -188,7 +194,7 @@ const MyProfilePage = () => {
   }
 
   return (
-    <div className="px-4 py-5 flex flex-col gap-5">
+    <div className="px-4 py-5 pb-44 md:pb-10 flex flex-col gap-5">
       <div>
         <div>
           <PageTitleCard forProfile title="My Profile" />
@@ -275,10 +281,77 @@ const MyProfilePage = () => {
         </div>
       </div>
 
+      {/* CONTACT SUPPORT SECTION */}
+      <div className="flex flex-col gap-5 mt-5">
+        <div className="flex justify-between">
+          <h1 className="text-xl font-semibold text-[#2E5E99]">
+            You Need Help?
+          </h1>
+        </div>
+        <div className="bg-[#D0DDED] flex flex-col  gap-4 px-4 py-5 rounded-2xl">
+
+
+          <div className=" flex justify-between gap-2 pb-5 rounded-2xl">
+            <p className="flex items-center gap-3 text-gray-600">
+              <span className="">
+                <FaHandsHelping className="text-lg" />
+              </span>
+              Contact Support
+            </p>
+            <div>
+              <Button
+                long={false}
+                primary
+                text="Contact"
+                onClick={()=>setContactForm(true)}
+              />
+            </div>
+          </div>
+
+
+          <div className="flex w-full justify-between">
+            <p className="flex items-center gap-3 text-gray-600">
+              <span className="">
+                <FaPhone className="text-lg" />
+              </span>
+              <a href="tel:morriscotech@gmail.com"
+                className=""
+              >+234 80 5929 4675</a>
+
+            </p>
+
+            {/* <div>
+              <a href="tel:morriscotech@gmail.com"
+                className="bg-[#2E5E99] px-4 py-1 rounded-lg text-gray-200 font-semibold"
+              >Call</a>
+            </div> */}
+          </div>
+          <div className="flex w-full justify-between">
+            <p className="flex items-center gap-3 text-gray-600">
+              <span className="">
+                <FaEnvelope className="text-lg" />
+              </span>
+              <a href="mailto:morriscotech@gmail.com"
+                className=""
+              >morriscotech@gmail.com</a>
+              
+            </p>
+            {/* <div>
+              <a href="mailto:morriscotech@gmail.com"
+                className="bg-[#2E5E99] px-4 py-1 rounded-lg text-gray-200 font-semibold"
+              >send</a>
+            </div> */}
+          </div>
+
+
+
+        </div>
+      </div>
+
       {/* MY EDIT PROFILE PICTURE MODALS STARTS FROM HERE */}
       {editPicture && (
         <div className="fixed inset-0 bg-black/50 md:px-98 z-999 animate-modal px-4 flex justify-center items-center ">
-          <div className="bg-[#E9F1FA] md:w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
+          <div className="bg-[#E9F1FA]  rounded-2xl px-4 py-5 flex flex-col gap-5">
             <div className="text-2xl flex justify-between mb-4">
               <h1 className="text-xl font-semibold text-[#2E5E99]">
                 Update Profile Picture
@@ -298,7 +371,7 @@ const MyProfilePage = () => {
                   type="file"
                   name="image"
                   onChange={(e) => handleImageUpload(e, setProfileImage, setShowAlert)}
-                  className="mt-2 w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md text-gray-400 flex "
+                  className="mt-2 w-full md:w-full h-12 px-3 bg-[#D0DDED] font-light outline-none border border-transparent  rounded-md text-gray-400 flex "
                 />
               </div>
               <div>
@@ -313,7 +386,7 @@ const MyProfilePage = () => {
 
       {editDetail && (
         <div className="fixed inset-0 bg-black/50 md:px-98 z-999 animate-modal px-4 flex justify-center items-center ">
-          <div className="bg-[#E9F1FA] md:justify-center md:items-center md:w-full rounded-2xl px-4 py-5 flex flex-col gap-5">
+          <div className="bg-[#E9F1FA] md:justify-center md:items-center rounded-2xl px-4 py-5 flex flex-col gap-5">
             <div className="text-2xl  w-full flex justify-between mb-4">
               <h1 className="text-xl font-semibold text-[#2E5E99]">
                 Update Details
@@ -440,6 +513,11 @@ const MyProfilePage = () => {
             </form>
           </div>
 
+        </div>
+      )}
+      {contactForm && (
+        <div className="fixed inset-0 bg-black/50 px-10 z-999 animate-modal flex justify-center items-center "> 
+          <ContactSupportForm setContactForm = {setContactForm} />
         </div>
       )}
       {showAlert.show && (

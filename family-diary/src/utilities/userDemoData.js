@@ -32,6 +32,17 @@ export const users = [
     age: 28,
     role: "son",
   },
+  {
+    id: "12",
+    name: "Mercy A.",
+    email: "morrisonmiller2@gmail.com",
+    phone: "+2348012345678",
+    gender: "female",
+    dob: "14, Feb. 1992",
+    image: "/images/miller.jpg",
+    age: 28,
+    role: "Daughter",
+  }
 ];
 
 export const user = [

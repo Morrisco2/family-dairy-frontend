@@ -23,7 +23,7 @@ const WelcomeHeader = ({ name = "Morrisco Uffikairo Adibor" }) => {
           : currentUser?.name}
       </h1>
       <div className="flex items-center">
-        <button onClick={() => navigate("/dashboard/notification")}>
+        <button className="cursor-pointer" onClick={() => navigate("/dashboard/notification")}>
           <div className="p-2 text-2xl text-[#2E5E99] font-semibold">
             <small className="text-sm bg-red-600 p-0.5 px-1 flex justify-center items-center text-gray-100 rounded-full relative top-2 right-2 ">
               10
@@ -32,7 +32,7 @@ const WelcomeHeader = ({ name = "Morrisco Uffikairo Adibor" }) => {
           </div>
         </button>
         <button
-          className="flex justify-between items-center"
+          className="flex justify-between items-center cursor-pointer"
           onClick={() => navigate("/dashboard/my-profile")}>
           <div
             className="p-3 text-2xl h-10 w-10 bg-[#2E5E99] rounded-full text-gray-200 font-semibold"

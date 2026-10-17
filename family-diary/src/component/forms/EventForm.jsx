@@ -38,7 +38,7 @@ const EventForm = ({ event, onClick }) => {
       setShowAlert((prev) => ({
         ...prev,
         show: true,
-        message: "please fill al required field!"
+        message: "please fill all required field!"
       }))
 
       return

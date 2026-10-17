@@ -232,6 +232,7 @@ const TreeCanvas = () => {
         relationType={relationType}
         onClose={() => setShowModal(false)}
         onSubmit={handleAddMember}
+        selectedPerson={selectedPerson}
       />
     </div>
   );
