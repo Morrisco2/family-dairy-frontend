@@ -4,6 +4,7 @@ import Button from "../Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import BackgroundGradient from "../../utilities/BackgroundGradient";
 import AlertToaster from "../toasters/AlertToaster";
+import baseUrl from "../../utilities/BaseURL";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,12 +39,70 @@ const Login = () => {
       }))
       return;
     }
-    setLoading(true);
-    setShowAlert((prev)=> ({
-      ...prev, show: true,
-      message: "Login successful",
-    status: "success"}))
-    navigate("/join-family");
+
+    setLoading(true)
+
+    const login = async () => {
+      try {
+
+        const req = await fetch(`${baseUrl}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(input)
+        })
+
+
+        const res = await req.json();
+
+
+        if (res.status !== 'success') {
+          console.log('error from backend is: ', res);
+          
+          setShowAlert((prev) => ({
+            ...prev, show: true,
+            message: res.message,
+            status: 'failed'
+          }))
+
+          setLoading(false)
+          return
+
+
+        }
+
+        setShowAlert((prev) => ({
+          ...prev, show: true,
+          message: "Login successful",
+          status: "success"
+        }))
+
+        console.log(res);
+        
+
+        setLoading(false)
+
+        navigate("/join-family");
+
+      } catch (error) {
+        setShowAlert((prev) => ({
+          ...prev,
+          show: true,
+          message: error.message,
+          status: 'failed'
+        }))
+
+        setLoading(false)
+
+        return
+      }
+    }
+
+    login()
+
+
+
   };
 
   const handleAlert = () => {
@@ -67,8 +126,8 @@ const Login = () => {
               message={showAlert.message}
               status={showAlert.status}
               duration={5000}
-              onClose={()=>setShowAlert((prev)=>({...prev, show:false}))}
-               />
+              onClose={() => setShowAlert((prev) => ({ ...prev, show: false }))}
+            />
           </div>
         )}
         <div className="flex flex-col gap-7">

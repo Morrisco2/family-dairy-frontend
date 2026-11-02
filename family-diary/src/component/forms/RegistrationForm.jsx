@@ -27,10 +27,10 @@ const RegistrationForm = () => {
     email: "".toString().trim(),
     phoneNumber: "".toString().trim(),
     dob: "".toString().trim(),
-    role: "".toString().trim(),
+    // role: "".toString().trim(),
     password: "".toString().trim(),
     image: null,
-    trems: ""
+    terms: ""
   })
 
   const navigate = useNavigate()
@@ -38,7 +38,7 @@ const RegistrationForm = () => {
   // password strength check
   const { checks, strength } = PasswordStrength(password);
 
-
+  const formData = new FormData()
   // handle input change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -57,8 +57,8 @@ const RegistrationForm = () => {
 
     if (
       !input.name ||
-      !input.email || !phone || !input.dob || !password ||
-      !input.role
+      !input.email || !phone || !input.dob || !password
+      // || !input.role
     ) {
       setShowAlert((prev) => ({
         ...prev, show: true,
@@ -66,40 +66,40 @@ const RegistrationForm = () => {
         status: "failed"
       }))
       return ({ pass: false })
-    } else  if (PasswordStrength(password).strength < 5) {
-        setShowAlert((prev) => ({
-          ...prev, show: true,
-          message: "Create a stronger password",
-          status: "failed"
+    } else if (PasswordStrength(password).strength < 5) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: "Create a stronger password",
+        status: "failed"
 
-        }))
-        return ({ pass: false })
-      } else if (password.toString().trim() !== cPassword.toString().trim()) {
-        setShowAlert((prev) => ({
-          ...prev,
-          show: true,
-          message: "Password mismatch!",
-          status: "failed",
+      }))
+      return ({ pass: false })
+    } else if (password.toString().trim() !== cPassword.toString().trim()) {
+      setShowAlert((prev) => ({
+        ...prev,
+        show: true,
+        message: "Password mismatch!",
+        status: "failed",
 
-        }))
+      }))
 
-        return ({ pass: false })
-      } else if (input.terms !== true) {
-            setShowAlert((prev)=>({
-              ...prev,
-              show: true,
-              message: "Please accept the terms and conditions",
-              status: "failed"
-            }))
+      return ({ pass: false })
+    } else if (input.terms !== true) {
+      setShowAlert((prev) => ({
+        ...prev,
+        show: true,
+        message: "Please accept the terms and conditions",
+        status: "failed"
+      }))
 
-            return ({ pass: false })
-          }
-  
-
+      return ({ pass: false })
+    }
 
 
-      return ({ pass: true })
-    
+
+
+    return ({ pass: true })
+
 
 
 
@@ -118,51 +118,88 @@ const RegistrationForm = () => {
       return
     }
 
-    console.log("the input is : ", input)
 
     const request = async () => {
+      formData.append('name', input.name);
+      formData.append('email', input.email);
+      formData.append('phoneNumber', input.phoneNumber);
+      formData.append('dob', input.dob);
+      formData.append('password', input.password);
+      formData.append('terms', input.terms);
+      if (input.image) {
+        formData.append("image", input.image);
+      }
+
+
+      console.log("Terms:", input.terms);
+      // console.log("FormData image:", formData.get("image"));
+      // console.log("FormData entries:", [...formData.entries()]);
       try {
-        const req = await fetch(`${baseUrl}/register`, {
+
+
+
+        const req = await fetch(`${baseUrl}/auth/register`, {
           method: "POST",
-          headers: {
-            'content-Type': "application/json",
+          // headers: {
+          //   'Content-Type': 'application/json'
+          // },
+          body: formData
+        });
 
-          },
-          body: JSON.stringify(input)
 
-        })
 
-        const res = await req.json()
+        const res = await req.json();
+        console.log('the respones from the backend is: ', res);
 
         if (res.status !== "success") {
+
+          let finalErrorMessage = "Validation Failed";
+
+          if (Array.isArray(res.errors) && res.errors.length > 0) {
+            finalErrorMessage = res.errors[0].message;
+          } else if (typeof res.message === 'string') {
+            try {
+              const parsedMessage = JSON.parse(res.message);
+              if (Array.isArray(parsedMessage) && parsedMessage.length > 0) {
+                finalErrorMessage = parsedMessage[0].message;
+              } else {
+                finalErrorMessage = res.message;
+              }
+            } catch {
+              finalErrorMessage = res.message;
+            }
+          }
+
           setShowAlert((prev) => ({
-            ...prev, show: true,
-            message: res.message,
+            ...prev,
+            show: true,
+            message: finalErrorMessage,
             status: "failed",
-          }))
+          }));
 
           return;
         }
 
         setShowAlert((prev) => ({
-          ...prev, show: true,
-          message: res.message,
+          ...prev,
+          show: true,
+          message: res.message || "Registration Successful!",
           status: "success"
-        }))
+        }));
 
-        navigate("/login")
-
+        navigate("/login");
 
       } catch (error) {
+        console.log('error coming from the backend is : ', error);
+
         setShowAlert((prev) => ({
-          ...prev, show: true,
-          message: error.message,
+          ...prev,
+          show: true,
+          message: 'something Went Wrong, please try again later',
           status: "failed"
-        }))
-
-
+        }));
       }
-    }
+    };
 
 
     request()
@@ -262,22 +299,21 @@ const RegistrationForm = () => {
               />
             </div>
 
-            <div className="flex w-80 justify-between gap-4  items-end">
-              <div className="relative flex-1">
-                <label className="font-semibold" htmlFor="dob">
-                  D.O.B
-                </label>
-                <input
-                  type="date"
-                  onChange={handleChange}
-                  value={input.dob}
-                  className="bg-[#D0DDED] h-12 px-3 "
-                  id="dob"
-                  name="dob"
-                />
-              </div>
+            <div className="relative flex-1 w-80 flex flex-col">
+              <label className="font-semibold" htmlFor="dob">
+                D.O.B
+              </label>
+              <input
+                type="date"
+                onChange={handleChange}
+                value={input.dob}
+                className="bg-[#D0DDED] h-12 px-3 "
+                id="dob"
+                name="dob"
+              />
+            </div>
 
-              <div className="relative flex-1">
+            {/* <div className="relative flex-1">
                 <select
                   id="role"
                   name="role"
@@ -304,7 +340,6 @@ const RegistrationForm = () => {
                   Role
                 </label>
 
-                {/* Dropdown arrow */}
                 <svg
                   className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600 pointer-events-none"
                   fill="none"
@@ -317,8 +352,7 @@ const RegistrationForm = () => {
                     d="M19 9l-7 7-7-7"
                   />
                 </svg>
-              </div>
-            </div>
+              </div> */}
 
             <div className="relative w-80">
               <input
