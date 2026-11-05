@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WelcomeHeader from "../component/WelcomeHeader";
 import SearchBar from "../component/SearchBar";
 import FamilyListCard from "../component/FamilyListCard";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import CreateFamilyForm from "../component/forms/CreateFamilyForm";
 import ListSkeleton from "../component/loaders/skeletonComponent/ListSkeleton";
 import EmptyFamilySearch from "../component/EmptyFamilySearch";
+import baseUrl from "../utilities/BaseURL";
 
 const JoinFamilyPage = () => {
   console.log("my page re-render");
@@ -45,6 +46,31 @@ const JoinFamilyPage = () => {
       leaderName: "Uffikairo Morrison"
     },
   ]
+
+  useEffect(()=>{
+    const fetchFamilies = async ()=>{
+      const req = await fetch(`${baseUrl}/family/fetch-family`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+
+      const res = await req.json()
+
+
+      console.log('respones from family route is: ', res);
+      
+
+      // if (condition) {
+        
+      // }
+    }
+
+    fetchFamilies()
+  }, [])
 
   return (
     <div className="flex flex-col gap-8 px-4 py-5 overflow-hidden pb-40">
