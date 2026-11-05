@@ -5,10 +5,8 @@ import { useState } from "react";
 import SpinLoader from "../component/loaders/SpinLoader";
 
 const LandingPage = () => {
-  const [display, setDisplay] = useState(false)
-  setTimeout(() => {
-    setDisplay(true)
-  }, 2000);
+  const [display, setDisplay] = useState(true)
+
   return (
     <section className="relative min-h-screen overflow-hidden">
       {display ? (

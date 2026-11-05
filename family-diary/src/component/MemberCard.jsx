@@ -9,6 +9,10 @@ const MemberCard = ({
     backgroundPosition: "top",
     backgroundRepeat: "no-repeat",
   };
+
+  const nameLength = user.name.length
+  console.log(nameLength>30);
+  
   return (
     <button className="w-full" onClick={onClick}>
       <div className="flex  gap-4 flex-wrap animate-modal">
@@ -19,7 +23,7 @@ const MemberCard = ({
               style={backgroundImgStyle}></div>
 
             <p className="font-semibold flex flex-col items-start text-gray-700">
-              {user.name.slice(0, 30) + "..."}{" "}
+              {nameLength>=30? user.name.slice(0, 30) +  "..." : user.name}
               <span className="font-bold text-[#2E5E99]">({user.role})</span>
             </p>
           </div>

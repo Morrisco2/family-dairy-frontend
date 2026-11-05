@@ -11,6 +11,7 @@ import {
   FaPhone,
   FaEnvelope,
   FaHandsHelping,
+  FaDoorOpen,
 } from "react-icons/fa";
 import ProfileCard from "../component/ProfileCard";
 import PageTitleCard from "../component/PageTitleCard";
@@ -44,7 +45,7 @@ const MyProfilePage = () => {
     status: ""
   })
   const [loading, setLoading] = useState(false)
-  const [contactForm,setContactForm] = useState(false)
+  const [contactForm, setContactForm] = useState(false)
 
   const handleChangePassword = () => {
     const email = user[0].email;
@@ -196,9 +197,16 @@ const MyProfilePage = () => {
   return (
     <div className="px-4 py-5 pb-44 md:pb-10 flex flex-col gap-5">
       <div>
-        <div>
+        <div className="flex items-start justify-between ">
           <PageTitleCard forProfile title="My Profile" />
+          <button className="flex flex-col items-center ">
+            <div className="bg-red-600 text-gray-200 p-1 rounded-full">
+              <FaDoorOpen className="text-xl " />
+            </div>
+            <span className="text-sm font-extralight text-gray-500"><small>Logout</small></span>
+          </button>
         </div>
+
         {loaded ? (
           <div className="-mt-13">
             {user.map((user) => {
@@ -303,7 +311,7 @@ const MyProfilePage = () => {
                 long={false}
                 primary
                 text="Contact"
-                onClick={()=>setContactForm(true)}
+                onClick={() => setContactForm(true)}
               />
             </div>
           </div>
@@ -334,7 +342,7 @@ const MyProfilePage = () => {
               <a href="mailto:morriscotech@gmail.com"
                 className=""
               >morriscotech@gmail.com</a>
-              
+
             </p>
             {/* <div>
               <a href="mailto:morriscotech@gmail.com"
@@ -516,8 +524,8 @@ const MyProfilePage = () => {
         </div>
       )}
       {contactForm && (
-        <div className="fixed inset-0 bg-black/50 px-10 z-999 animate-modal flex justify-center items-center "> 
-          <ContactSupportForm setContactForm = {setContactForm} />
+        <div className="fixed inset-0 bg-black/50 px-10 z-999 animate-modal flex justify-center items-center ">
+          <ContactSupportForm setContactForm={setContactForm} />
         </div>
       )}
       {showAlert.show && (
