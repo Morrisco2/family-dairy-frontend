@@ -4,6 +4,7 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 
 const CreateFamilyForm = ({ setCreateFamily }) => {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const CreateFamilyForm = ({ setCreateFamily }) => {
 
     const createFamily = async ()=>{
       try {
-        const request = await fetch(`${baseUrl}/create-new-family`, {
+        const request = await apiFetch(`${baseUrl}/family/create-family`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

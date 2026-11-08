@@ -6,6 +6,7 @@ import Button from "../Button";
 import AlertToaster from "../toasters/AlertToaster";
 import { PasswordStrength } from "../../utilities/PasswordStrength";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 import { useNavigate } from "react-router-dom";
 
 const ResetPAssword = () => {
@@ -85,7 +86,7 @@ const ResetPAssword = () => {
 
     const changePassword = async () => {
       try {
-        const request = await fetch(`${baseUrl}/reset-password`, {
+        const request = await apiFetch(`${baseUrl}/reset-password`, {
           method: "PUT",
           headers: {
             "content-Type": "application/json",

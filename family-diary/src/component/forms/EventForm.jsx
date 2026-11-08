@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../Button";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 
 const EventForm = ({ event, onClick }) => {
   const [submitted, setSubmitted] = useState(false)
@@ -47,7 +48,7 @@ const EventForm = ({ event, onClick }) => {
     setSubmitted(true)
     const createEvent = async () => {
       try {
-        const request = await fetch(`${baseUrl}/create-event`, {
+        const request = await apiFetch(`${baseUrl}/create-event`, {
           method: "POST",
           headers: {
             "content-Type": "application/json"

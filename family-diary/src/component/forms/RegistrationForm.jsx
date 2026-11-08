@@ -8,6 +8,7 @@ import { PasswordStrength } from "../../utilities/PasswordStrength";
 import PasswordShowSheet from "../../utilities/PasswordShowSheet";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 import { handleImageUpload } from "../../utilities/imageUpload";
 
 const RegistrationForm = () => {
@@ -22,6 +23,7 @@ const RegistrationForm = () => {
     message: "",
     status: null
   })
+  const [loading, setLoading] = useState(false)
   const [input, setInput] = useState({
     name: "".toString().trim(),
     email: "".toString().trim(),
@@ -35,8 +37,6 @@ const RegistrationForm = () => {
 
   const navigate = useNavigate()
 
-  // password strength check
-  const { checks, strength } = PasswordStrength(password);
 
   const formData = new FormData()
   // handle input change
@@ -107,6 +107,7 @@ const RegistrationForm = () => {
 
   // handle form submission
   const handleSubmit = (event) => {
+    setLoading(true)
     setInput((prev) => ({
       ...prev, phoneNumber: phone, password: password
     }))
@@ -115,41 +116,39 @@ const RegistrationForm = () => {
     const validatorResult = inputValidator()
 
     if (validatorResult.pass !== true) {
+      setLoading(false)
+
       return
+
     }
 
 
     const request = async () => {
       formData.append('name', input.name);
       formData.append('email', input.email);
-      formData.append('phoneNumber', input.phoneNumber);
+      formData.append('phoneNumber', phone);
       formData.append('dob', input.dob);
-      formData.append('password', input.password);
+      formData.append('password', password);
       formData.append('terms', input.terms);
       if (input.image) {
         formData.append("image", input.image);
       }
 
 
-      console.log("Terms:", input.terms);
-      // console.log("FormData image:", formData.get("image"));
-      // console.log("FormData entries:", [...formData.entries()]);
+
       try {
 
 
 
-        const req = await fetch(`${baseUrl}/auth/register`, {
+        const req = await apiFetch(`${baseUrl}/auth/register`, {
           method: "POST",
-          // headers: {
-          //   'Content-Type': 'application/json'
-          // },
+
           body: formData
         });
 
 
 
         const res = await req.json();
-        console.log('the respones from the backend is: ', res);
 
         if (res.status !== "success") {
 
@@ -162,6 +161,7 @@ const RegistrationForm = () => {
               const parsedMessage = JSON.parse(res.message);
               if (Array.isArray(parsedMessage) && parsedMessage.length > 0) {
                 finalErrorMessage = parsedMessage[0].message;
+
               } else {
                 finalErrorMessage = res.message;
               }
@@ -169,6 +169,8 @@ const RegistrationForm = () => {
               finalErrorMessage = res.message;
             }
           }
+
+          setLoading(false)
 
           setShowAlert((prev) => ({
             ...prev,
@@ -180,6 +182,7 @@ const RegistrationForm = () => {
           return;
         }
 
+        setLoading(false)
         setShowAlert((prev) => ({
           ...prev,
           show: true,
@@ -190,7 +193,7 @@ const RegistrationForm = () => {
         navigate("/login");
 
       } catch (error) {
-        console.log('error coming from the backend is : ', error);
+        setLoading(false)
 
         setShowAlert((prev) => ({
           ...prev,
@@ -472,7 +475,7 @@ const RegistrationForm = () => {
               </label>
             </div>
             <div className=" w-80">
-              <Button text="Register" primary type="submit" />
+              <Button text="Register" primary type="submit" loading={loading} />
             </div>
 
             <p className="text-gray-500 ">

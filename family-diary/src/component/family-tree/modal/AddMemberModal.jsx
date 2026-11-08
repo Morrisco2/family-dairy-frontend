@@ -4,6 +4,7 @@ import { users } from '../../../utilities/userDemoData';
 import { familyMembers } from "../data/dummyTree";
 import AlertToaster from "../../toasters/AlertToaster";
 import baseUrl from "../../../utilities/BaseURL";
+import { apiFetch } from "../../../utilities/apiRequest";
 
 const AddMemberModal = ({ open, onClose,  selectedPerson }) => {
 
@@ -96,7 +97,7 @@ const AddMemberModal = ({ open, onClose,  selectedPerson }) => {
       // SAVE THE SELECTED NODE TO TREE
       const saveNode = async () => {
         try {
-          const request = await fetch(`${baseUrl}/history/family-tree/add-node`, {
+          const request = await apiFetch(`${baseUrl}/history/family-tree/add-node`, {
             method: "POST",
             headers: {
               "content-type": "application/json"
@@ -175,7 +176,7 @@ const AddMemberModal = ({ open, onClose,  selectedPerson }) => {
     const createNewNode = async () => {
 
       try {
-        const req = await fetch(`${baseUrl}/history/family-tree/create-node`, {
+        const req = await apiFetch(`${baseUrl}/history/family-tree/create-node`, {
           method: "POST",
           headers: {
             "content-type": "application/json"

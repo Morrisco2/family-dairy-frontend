@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import BackgroundGradient from "../../utilities/BackgroundGradient";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Login = () => {
     const login = async () => {
       try {
 
-        const req = await fetch(`${baseUrl}/auth/login`, {
+        const req = await apiFetch(`${baseUrl}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +59,6 @@ const Login = () => {
 
 
         if (res.status !== 'success') {
-          console.log('error from backend is: ', res);
           
           setShowAlert((prev) => ({
             ...prev, show: true,
@@ -78,7 +78,6 @@ const Login = () => {
           status: "success"
         }))
 
-        console.log(res);
         
 
         setLoading(false)
@@ -134,7 +133,7 @@ const Login = () => {
           <div className="relative w-80">
             <input
               name="email"
-              value={input.value}
+              value={input.email}
               onChange={handleChange}
               type="email"
               id="email"

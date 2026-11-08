@@ -3,6 +3,7 @@ import { FaBirthdayCake, FaTimes } from "react-icons/fa";
 import Button from "../Button";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 
 const SendWishForm = ({ closeModal, celebrant }) => {
     const [submitted, setSubmitted] = useState(false)
@@ -41,7 +42,7 @@ const SendWishForm = ({ closeModal, celebrant }) => {
 
         const sendWish = async () => {
             try {
-                const request = await fetch(`${baseUrl}/send-birthday-wish`, {
+                const request = await apiFetch(`${baseUrl}/send-birthday-wish`, {
                     method: "POST",
                     headers: {
                         "content-Type": "application/json"

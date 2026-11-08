@@ -18,6 +18,7 @@ import SendWishForm from "../component/forms/SendWishForm";
 import Button from "../component/Button";
 import AlertToaster from "../component/toasters/AlertToaster";
 import baseUrl from "../utilities/BaseURL";
+import { apiFetch } from "../utilities/apiRequest";
 
 const HomePage = () => {
   let loaded = true;
@@ -62,7 +63,7 @@ const HomePage = () => {
     const saveFather = async () => {
       try {
 
-        const req = await fetch(`${baseUrl}/home/save-father`, {
+        const req = await apiFetch(`${baseUrl}/home/save-father`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json"

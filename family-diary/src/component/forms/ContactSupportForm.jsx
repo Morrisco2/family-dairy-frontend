@@ -3,6 +3,7 @@ import Button from "../Button";
 import { useState } from "react";
 import AlertToaster from "../toasters/AlertToaster";
 import baseUrl from "../../utilities/BaseURL";
+import { apiFetch } from "../../utilities/apiRequest";
 
 const ContactSupportForm = ({ setContactForm }) => {
 
@@ -40,7 +41,7 @@ const ContactSupportForm = ({ setContactForm }) => {
 
         const sendSupport = async () => {
             try {
-                const req = await fetch(`${baseUrl}/help/in-app-support`, {
+                const req = await apiFetch(`${baseUrl}/help/in-app-support`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

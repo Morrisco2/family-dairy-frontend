@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { handleImageUpload } from "../utilities/imageUpload";
 import AlertToaster from "../component/toasters/AlertToaster";
 import baseUrl from "../utilities/BaseURL";
+import { apiFetch } from "../utilities/apiRequest";
 import ContactSupportForm from "../component/forms/ContactSupportForm";
 
 const MyProfilePage = () => {
@@ -46,6 +47,21 @@ const MyProfilePage = () => {
   })
   const [loading, setLoading] = useState(false)
   const [contactForm, setContactForm] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      const response = await apiFetch(`${baseUrl}/auth/logout`, { method: "POST" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Unable to log out. Please try again.");
+      navigate("/login", { replace: true });
+    } catch (error) {
+      setShowAlert((prev) => ({
+        ...prev, show: true,
+        message: error.message || "Unable to log out. Please try again.",
+        status: "failed",
+      }));
+    }
+  };
 
   const handleChangePassword = () => {
     const email = user[0].email;
@@ -76,7 +92,7 @@ const MyProfilePage = () => {
 
     const uploadImage = async () => {
       try {
-        const request = await fetch(`${baseUrl}/upload-image`, {
+        const request = await apiFetch(`${baseUrl}/upload-image`, {
           method: "PUT",
           headers: {
             "content-Type": "application/json"
@@ -147,7 +163,7 @@ const MyProfilePage = () => {
 
     const saveEditedProfileChanges = async () => {
       try {
-        const request = await fetch(`${baseUrl}/save-profile-changes`, {
+        const request = await apiFetch(`${baseUrl}/save-profile-changes`, {
           method: "PUT",
           headers: {
             "content-Type": "application/json"
@@ -199,7 +215,7 @@ const MyProfilePage = () => {
       <div>
         <div className="flex items-start justify-between ">
           <PageTitleCard forProfile title="My Profile" />
-          <button className="flex flex-col items-center ">
+          <button onClick={handleLogout} className="flex flex-col items-center ">
             <div className="bg-red-600 text-gray-200 p-1 rounded-full">
               <FaDoorOpen className="text-xl " />
             </div>
