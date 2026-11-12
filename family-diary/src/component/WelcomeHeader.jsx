@@ -1,14 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaRegBell, FaImage } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { user } from "../utilities/userDemoData";
+import { apiFetch } from "../utilities/apiRequest";
+import baseUrl from "../utilities/BaseURL";
 
 const WelcomeHeader = ({ name = "Morrisco Uffikairo Adibor" }) => {
-  
+
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const req = await apiFetch(`${baseUrl}/user/user-data`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(input)
+        }
+        )
+
+        const res = await req.json()
+
+        console.log(res);
+
+      } catch (error) {
+
+      }
+    }
+    fetchData()
+
+  }, [])
+
   const backgroundImageStyle = {
-    backgroundImage:`url(${user[0].image})`,
+    backgroundImage: `url(${user[0].image})`,
     backgroundPosition: "top",
     backgroundSize: "cover",
     backgroundRepeat: "norepeat"
