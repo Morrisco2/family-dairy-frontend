@@ -1,72 +1,169 @@
-import React, { useEffect } from "react";
+
+import React, { useEffect, useState } from "react";
 import { FaRegBell, FaImage } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
-import { user } from "../utilities/userDemoData";
+import { useNavigate } from "react-router-dom";
+
 import { apiFetch } from "../utilities/apiRequest";
 import baseUrl from "../utilities/BaseURL";
+import AlertToaster from "./toasters/AlertToaster";
+import socket from "../utilities/socket";
 
-const WelcomeHeader = ({ name = "Morrisco Uffikairo Adibor" }) => {
+const WelcomeHeader = () => {
 
-  const navigate = useNavigate()
+  const [data, setData] = useState(null);
 
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    message: "",
+    status: ""
+  });
+
+  const navigate = useNavigate();
+
+  // SOCKET.IO USEEFFECT
   useEffect(() => {
+    socket.connect();
+
+    const handleNewNotification = (notification) => {
+      setData((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          notificationCount:
+            (prev.notificationCount || 0) + 1
+        };
+      });
+    };
+
+    socket.on("newNotification", handleNewNotification);
+
+    return () => {
+      socket.off("newNotification", handleNewNotification);
+      socket.disconnect();
+    };
+  }, []);
+
+  // FETCH AUTHENTICATED USER DATA
+  useEffect(() => {
+    let ignore = false;
+
     const fetchData = async () => {
       try {
-        const req = await apiFetch(`${baseUrl}/user/user-data`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(input)
+        const req = await apiFetch(
+          `${baseUrl}/user/user-data`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const res = await req.json();
+
+        if (!req.ok || !res.success) {
+          throw new Error(
+            res.message || "Unable to fetch user information."
+          );
         }
-        )
 
-        const res = await req.json()
-
-        console.log(res);
+        if (!ignore) {
+          setData(res.data);
+        }
 
       } catch (error) {
+        console.error("Failed to fetch user data:", error);
 
+        if (!ignore) {
+          setShowAlert({
+            show: true,
+            message: error.message || "Unable to fetch user information.",
+            status: "failed"
+          });
+        }
       }
-    }
-    fetchData()
+    };
 
-  }, [])
+    fetchData();
 
+    return () => {
+      ignore = true;
+    };
+
+  }, []);
+
+  // USER PROFILE IMAGE
   const backgroundImageStyle = {
-    backgroundImage: `url(${user[0].image})`,
-    backgroundPosition: "top",
+    backgroundImage: data?.imageUrl
+      ? `url("${data.imageUrl}")`
+      : "none",
+    backgroundPosition: "center",
     backgroundSize: "cover",
-    backgroundRepeat: "norepeat"
-  }
+    backgroundRepeat: "no-repeat"
+  };
 
-  const currentUser = user?.[0];
+  // USER NAME
+  const username = data?.username || "";
+  
+
   return (
     <div className="flex items-center justify-between">
+
+      {/* USER NAME */}
       <h1 className="text-lg font-semibold">
-        {currentUser?.name?.length > 22
-          ? `${currentUser.name.slice(0, 22)}...`
-          : currentUser?.name}
+        {username.length > 22
+          ? `${username.slice(0, 22)}...`
+          : username}
       </h1>
+
       <div className="flex items-center">
-        <button className="cursor-pointer" onClick={() => navigate("/dashboard/notification")}>
+
+        {/* NOTIFICATIONS */}
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={() => navigate("/dashboard/notification")}
+        >
           <div className="p-2 text-2xl text-[#2E5E99] font-semibold">
-            <small className="text-sm bg-red-600 p-0.5 px-1 flex justify-center items-center text-gray-100 rounded-full relative top-2 right-2 ">
-              10
+            <small className="text-sm bg-red-600 p-0.5 px-1 flex justify-center items-center text-gray-100 rounded-full relative top-2 right-2">
+              {data?.notificationCount ?? 0}
             </small>
+
             <FaRegBell />
           </div>
         </button>
+
+        {/* PROFILE IMAGE */}
         <button
+          type="button"
           className="flex justify-between items-center cursor-pointer"
-          onClick={() => navigate("/dashboard/my-profile")}>
+          onClick={() => navigate("/dashboard/my-profile")}
+        >
           <div
-            className="p-3 text-2xl h-10 w-10 bg-[#2E5E99] rounded-full text-gray-200 font-semibold"
-            style={backgroundImageStyle}>
-            {!user[0].image && <FaImage />}
+            className="flex justify-center items-center p-3 text-2xl h-10 w-10 bg-[#2E5E99] rounded-full text-gray-200 font-semibold overflow-hidden"
+            style={backgroundImageStyle}
+          >
+            {!data?.imageUrl && <FaImage />}
           </div>
         </button>
+
       </div>
+
+      {/* ALERT TOASTER */}
+      {showAlert.show && (
+        <AlertToaster
+          show={showAlert.show}
+          message={showAlert.message}
+          status={showAlert.status}
+          duration={4000}
+          onClose={() =>
+            setShowAlert((prev) => ({
+              ...prev,
+              show: false
+            }))
+          }
+        />
+      )}
+
     </div>
   );
 };

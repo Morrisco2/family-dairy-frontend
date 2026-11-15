@@ -13,6 +13,9 @@ import useSearchFilter from "../hooks/useSearchFilter";
 const JoinFamilyPage = () => {
   const [createFamily, setCreateFamily] = useState(false);
 
+
+  
+
   // BACKEND SEARCH AND PAGINATION
   const {
     data,
@@ -29,7 +32,7 @@ const JoinFamilyPage = () => {
     goToPage,
   } = useSearchFilter({
     endpoint: "/search/family",
-    limit: 10,
+    limit: 3,
     debounceMs: 1000,
     initialPage: 1,
   });
@@ -157,6 +160,8 @@ const JoinFamilyPage = () => {
                 familyName={family.familyName}
                 leaderName={family.leader.name}
                 image={family.leader.imageUrl}
+
+                familyId = {family._id}
               />
 
             ))}

@@ -26,6 +26,7 @@ import HistoryPage from "./pages/HistoryPage";
 import MyProfilePage from "./pages/MyProfilePage";
 import NetworkBanner from "./component/network/NetworkBanner";
 import LegalAndPolicies from "./pages/legal/LegalAndPolicies";
+import RequireNoFamily from "./component/guards/RequireNoFamily";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,7 +37,9 @@ const router = createBrowserRouter(
         <Route path="/forget-password" element={<FogorttenPassword />} />
         <Route path="/reset-password" element={<ResetPAssword />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/join-family" element={<JoinFamilyPage />} />
+        <Route element={<RequireNoFamily />}>
+          <Route path="/join-family" element={<JoinFamilyPage />} />
+        </Route>
         <Route path="/legal" element={<LegalAndPolicies />} />
       </Route>
       <Route path="/dashboard" element={<DashboardLayout />}>

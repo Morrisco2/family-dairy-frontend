@@ -21,7 +21,7 @@ const SearchBar = ({
           className="w-full h-full bg-transparent outline-none text-gray-800 placeholder:text-gray-500 text-sm"
         />
 
-        {value && (
+        {/* {value && (
           <button
             type="button"
             onClick={() => onChange("")}
@@ -30,7 +30,7 @@ const SearchBar = ({
           >
             <FaTimes />
           </button>
-        )}
+        )} */}
 
       </div>
     </div>
