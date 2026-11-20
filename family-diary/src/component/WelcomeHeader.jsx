@@ -21,28 +21,46 @@ const WelcomeHeader = () => {
   const navigate = useNavigate();
 
   // SOCKET.IO USEEFFECT
+  // useEffect(() => {
+  //   socket.connect();
+
+  //   const handleNewNotification = async () => {
+  //     try {
+  //       const response = await apiFetch(`${baseUrl}/notifications/unread-count`);
+  //       const result = await response.json();
+  //       if (response.ok && result.success) setData((prev) => prev ? { ...prev, notificationCount: result.data.count } : prev);
+  //     } catch (error) { console.error("Unable to refresh notification count:", error); }
+  //   };
+
+  //   socket.on("newNotification", handleNewNotification);
+
+  //   return () => {
+  //     socket.off("newNotification", handleNewNotification);
+  //   };
+  // }, []);
+
   useEffect(() => {
+  const handleNewNotification = async () => {
+      const handleNewNotification = async () => {
+      try {
+        const response = await apiFetch(`${baseUrl}/notifications/unread-count`);
+        const result = await response.json();
+        if (response.ok && result.success) setData((prev) => prev ? { ...prev, notificationCount: result.data.count } : prev);
+      } catch (error) { console.error("Unable to refresh notification count:", error); }
+    };
+  };
+
+  socket.on("newNotification", handleNewNotification);
+
+  if (!socket.connected) {
     socket.connect();
+  }
 
-    const handleNewNotification = (notification) => {
-      setData((prev) => {
-        if (!prev) return prev;
+  return () => {
+    socket.off("newNotification", handleNewNotification);
+  };
+}, []);
 
-        return {
-          ...prev,
-          notificationCount:
-            (prev.notificationCount || 0) + 1
-        };
-      });
-    };
-
-    socket.on("newNotification", handleNewNotification);
-
-    return () => {
-      socket.off("newNotification", handleNewNotification);
-      socket.disconnect();
-    };
-  }, []);
 
   // FETCH AUTHENTICATED USER DATA
   useEffect(() => {
@@ -68,6 +86,11 @@ const WelcomeHeader = () => {
 
         if (!ignore) {
           setData(res.data);
+          const countResponse = await apiFetch(`${baseUrl}/notifications/unread-count`);
+          const countResult = await countResponse.json();
+          if (!ignore && countResponse.ok && countResult.success) {
+            setData((prev) => prev ? { ...prev, notificationCount: countResult.data.count } : prev);
+          }
         }
 
       } catch (error) {
